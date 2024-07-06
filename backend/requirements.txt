@@ -1,0 +1,10 @@
+Flask
+flask-cors
+pandas
+numpy
+opencv-python
+Pillow
+matplotlib
+nbformat
+nbconvert
+torch
