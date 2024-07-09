@@ -5,16 +5,17 @@ import numpy as np
 import base64
 import torch
 from model import predict, fill_holes, skeletonize
+from datetime import datetime
 
 app = Flask(__name__)
 CORS(app)
 
 def predict_image(image):
-    checkpoint_path = "/home/yiting/coaste-detect/backend/29_model.pth"
+    checkpoint_path = "C:\\Users\\padra\\Newcoaste-detect\\backend\\29_model.pth"
     predicted_img = predict(checkpoint_path, image)
-    _, binary_image = cv2.threshold(predicted_img, 200, 255, cv2.THRESH_BINARY)
-    filled_image = fill_holes(binary_image)
-    skeleton = skeletonize(filled_image)
+    # _, binary_image = cv2.threshold(predicted_img, 200, 255, cv2.THRESH_BINARY)
+    # filled_image = fill_holes(binary_image)
+    # skeleton = skeletonize(filled_image)
     return predicted_img
 
 @app.route('/predict', methods=['POST'])
@@ -31,7 +32,10 @@ def predict_route():
 
     _, buffer = cv2.imencode('.png', result)
     encoded_image = base64.b64encode(buffer).decode('utf-8')
-    return jsonify({'result': encoded_image})
+
+    processing_time = datetime.utcnow().isoformat() + 'Z'
+
+    return jsonify({'result': encoded_image, 'processingTime': processing_time})
 
 if __name__ == '__main__':
     app.run(debug=True)

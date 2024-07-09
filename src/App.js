@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Sidebar from './components/Sidebar';
+import MiniDrawer from './components/MiniDrawer';
 import MainWorkArea from './components/MainWorkArea';
 import axios from 'axios';
 
@@ -63,7 +63,14 @@ function App() {
                                 'Content-Type': 'multipart/form-data'
                             }
                         });
-                        newPredictionResults[i] = `data:image/png;base64,${response.data.result}`;
+                        const resultImage = `data:image/png;base64,${response.data.result}`;
+                        const processingTime = response.data.processingTime;
+
+                        newPredictionResults[i] = {
+                            result: resultImage,
+                            processingTime: processingTime,
+                        };
+
                         setProcessedImages(prev => new Set(prev).add(imageFile.id));
                     } catch (error) {
                         console.error('Error fetching prediction result:', error);
@@ -76,22 +83,18 @@ function App() {
     };
 
     return (
-        <div className="App container-fluid">
-            <div className="row flex-grow-1">
-                <Sidebar
-                    onFileUpload={handleFileUpload}
-                    uploadedImageFiles={uploadedImageFiles}
-                    onDeleteImage={handleDeleteImage}
-                    onClearImages={handleClearImages}
-                    onGetResult={handleGetResult}
-                />
-                <MainWorkArea
-                    uploadedImageFiles={uploadedImageFiles}
-                    predictionResults={predictionResults}
-                    showResults={showResults}
-                />
-            </div>
-        </div>
+        <MiniDrawer
+            onFileUpload={handleFileUpload}
+            onClearImages={handleClearImages}
+            onGetResult={handleGetResult}
+        >
+            <MainWorkArea
+                uploadedImageFiles={uploadedImageFiles}
+                onDeleteImage={handleDeleteImage}
+                predictionResults={predictionResults}
+                showResults={showResults}
+            />
+        </MiniDrawer>
     );
 }
 
