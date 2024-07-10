@@ -12,12 +12,14 @@ import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
 import IconButton from '@mui/material/IconButton';
 import ZoomInRoundedIcon from '@mui/icons-material/ZoomInRounded';
+import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 import './MainWorkArea.css';
 import Fab from '@mui/material/Fab';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import Zoom from '@mui/material/Zoom';
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
-function MainWorkArea({ uploadedImageFiles, predictionResults, showResults, onDeleteImage  }) {
+function MainWorkArea({ uploadedImageFiles, predictionResults, showResults, onDeleteImage, displayModes, setDisplayModes }) {
     const [showModal, setShowModal] = useState(false);
     const [modalImage, setModalImage] = useState('');
     const [showScroll, setShowScroll] = useState(false);
@@ -57,6 +59,18 @@ function MainWorkArea({ uploadedImageFiles, predictionResults, showResults, onDe
             window.removeEventListener('scroll', checkScrollTop);
         };
     }, [checkScrollTop]);
+
+    const handleDisplayModeChange = (index) => {
+        setDisplayModes(prevModes => ({
+            ...prevModes,
+            [index]: prevModes[index] === 'binary' ? 'color' : 'binary'
+        }));
+    };
+
+    const getDisplayImage = (result, index) => {
+        if (!result || result === 'error') return null;
+        return displayModes[index] === 'color' ? result.colorResult : result.binaryResult;
+    };
 
     return (
         <div className="container-fluid p-3 d-flex flex-column">
@@ -150,7 +164,7 @@ function MainWorkArea({ uploadedImageFiles, predictionResults, showResults, onDe
                                             </div>
                                         ) : predictionResults[index] === 'error' ? (
                                             <div className="error-placeholder">
-                                                <p>Error processing image</p>
+                                                <p>Error processing image. Please try again or contact support if the problem persists.</p>
                                             </div>
                                         ) : (
                                             <Card>
@@ -158,12 +172,12 @@ function MainWorkArea({ uploadedImageFiles, predictionResults, showResults, onDe
                                                     <CardMedia
                                                         component="img"
                                                         height="140"
-                                                        image={predictionResults[index].result}
+                                                        image={getDisplayImage(predictionResults[index], index)}
                                                         alt={`Processed ${index + 1}`}
                                                     />
                                                     <CardContent>
                                                         <Typography gutterBottom variant="h6" component="div">
-                                                            Processed Image
+                                                            Processed Image ({displayModes[index] || 'binary'})
                                                         </Typography>
                                                         <Typography variant="body2" color="text.secondary">
                                                             Detected Shoreline for: {truncateFileName(image.file.name)} <br />
@@ -171,8 +185,11 @@ function MainWorkArea({ uploadedImageFiles, predictionResults, showResults, onDe
                                                         </Typography>
                                                     </CardContent>
                                                     <CardActions>
+                                                        <IconButton color="primary" onClick={() => handleDisplayModeChange(index)}>
+                                                            <SwapHorizIcon />
+                                                        </IconButton>
                                                         <div style={{ flex: 1 }} />
-                                                        <IconButton color="primary" onClick={() => handleImageClick(predictionResults[index].result)}>
+                                                        <IconButton color="primary" onClick={() => handleImageClick(getDisplayImage(predictionResults[index], index))}>
                                                             <ZoomInRoundedIcon />
                                                         </IconButton>
                                                         <Button size="small" variant="outlined" startIcon={<DownloadRoundedIcon />}>Download</Button>
@@ -188,9 +205,26 @@ function MainWorkArea({ uploadedImageFiles, predictionResults, showResults, onDe
                     </div>
                 )}
             </div>
-            <Modal show={showModal} onHide={() => setShowModal(false)} size="lg" centered>
-                <Modal.Body>
-                    <img src={modalImage} alt="Enlarged" style={{width: '100%', height: 'auto'}} />
+            <Modal show={showModal} onHide={() => setShowModal(false)} size="xl" centered fullscreen>
+                <Modal.Body style={{ height: '90vh', display: 'flex', flexDirection: 'column' }}>
+                    <TransformWrapper
+                        initialScale={1}
+                        initialPositionX={0}
+                        initialPositionY={0}
+                    >
+                        {({ zoomIn, zoomOut, resetTransform }) => (
+                            <React.Fragment>
+                                <div className="tools" style={{ marginBottom: '10px' }}>
+                                    <Button onClick={() => zoomIn()}>Zoom In</Button>
+                                    <Button onClick={() => zoomOut()}>Zoom Out</Button>
+                                    <Button onClick={() => resetTransform()}>Reset</Button>
+                                </div>
+                                <TransformComponent wrapperStyle={{ width: '100%', height: '100%' }}>
+                                    <img src={modalImage} alt="Enlarged" style={{maxWidth: '100%', maxHeight: '100%', objectFit: 'contain'}} />
+                                </TransformComponent>
+                            </React.Fragment>
+                        )}
+                    </TransformWrapper>
                 </Modal.Body>
             </Modal>
             <Zoom in={showScroll}>

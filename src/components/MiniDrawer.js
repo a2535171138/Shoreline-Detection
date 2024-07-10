@@ -20,6 +20,7 @@ import FileUploadRoundedIcon from '@mui/icons-material/FileUploadRounded';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 import SettingsIcon from '@mui/icons-material/Settings';
 import DeleteSweepRoundedIcon from '@mui/icons-material/DeleteSweepRounded';
+import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 
 const drawerWidth = 240;
 
@@ -87,7 +88,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
     }),
 );
 
-function MiniDrawer({ onFileUpload, onClearImages, onGetResult, children }) {
+function MiniDrawer({ onFileUpload, onClearImages, onGetResult, onToggleAllDisplayModes, children }) {
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
     const fileInputRef = React.useRef(null);
@@ -221,6 +222,27 @@ function MiniDrawer({ onFileUpload, onClearImages, onGetResult, children }) {
                                 <DeleteSweepRoundedIcon />
                             </ListItemIcon>
                             <ListItemText primary="Clear Image" sx={{ opacity: open ? 1 : 0 }} />
+                        </ListItemButton>
+                    </ListItem>
+                    <ListItem disablePadding sx={{ display: 'block' }}>
+                        <ListItemButton
+                            onClick={onToggleAllDisplayModes}
+                            sx={{
+                                minHeight: 48,
+                                justifyContent: open ? 'initial' : 'center',
+                                px: 2.5,
+                            }}
+                        >
+                            <ListItemIcon
+                                sx={{
+                                    minWidth: 0,
+                                    mr: open ? 3 : 'auto',
+                                    justifyContent: 'center',
+                                }}
+                            >
+                                <SwapHorizIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Toggle All" sx={{ opacity: open ? 1 : 0 }} />
                         </ListItemButton>
                     </ListItem>
                 </List>

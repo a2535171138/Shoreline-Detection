@@ -10,6 +10,7 @@ function App() {
     const [predictionResults, setPredictionResults] = useState([]);
     const [showResults, setShowResults] = useState(false);
     const [processedImages, setProcessedImages] = useState(new Set());
+    const [displayModes, setDisplayModes] = useState({});
 
     const handleFileUpload = (files) => {
         const imageFiles = Array.from(files).map(file => ({
@@ -19,6 +20,18 @@ function App() {
         }));
         setUploadedImageFiles(prevFiles => [...prevFiles, ...imageFiles]);
         setPredictionResults(prevResults => [...prevResults, ...new Array(files.length).fill(null)]);
+    };
+
+    const handleToggleAllDisplayModes = () => {
+        setDisplayModes(prevModes => {
+            const newModes = {};
+            const currentMode = Object.values(prevModes)[0] || 'binary';
+            const nextMode = currentMode === 'binary' ? 'color' : 'binary';
+            uploadedImageFiles.forEach((_, index) => {
+                newModes[index] = nextMode;
+            });
+            return newModes;
+        });
     };
 
     const handleDeleteImage = (index) => {
@@ -63,12 +76,12 @@ function App() {
                                 'Content-Type': 'multipart/form-data'
                             }
                         });
-                        const resultImage = `data:image/png;base64,${response.data.result}`;
-                        const processingTime = response.data.processingTime;
 
                         newPredictionResults[i] = {
-                            result: resultImage,
-                            processingTime: processingTime,
+                            binaryResult: `data:image/png;base64,${response.data.binary_result}`,
+                            colorResult: `data:image/png;base64,${response.data.color_result}`,
+                            pixelsResult: response.data.pixels_result,
+                            processingTime: response.data.processingTime,
                         };
 
                         setProcessedImages(prev => new Set(prev).add(imageFile.id));
@@ -87,12 +100,15 @@ function App() {
             onFileUpload={handleFileUpload}
             onClearImages={handleClearImages}
             onGetResult={handleGetResult}
+            onToggleAllDisplayModes={handleToggleAllDisplayModes}
         >
             <MainWorkArea
                 uploadedImageFiles={uploadedImageFiles}
                 onDeleteImage={handleDeleteImage}
                 predictionResults={predictionResults}
                 showResults={showResults}
+                displayModes={displayModes}
+                setDisplayModes={setDisplayModes}
             />
         </MiniDrawer>
     );
