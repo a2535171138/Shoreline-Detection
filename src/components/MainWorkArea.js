@@ -18,11 +18,15 @@ import Fab from '@mui/material/Fab';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import Zoom from '@mui/material/Zoom';
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 
 function MainWorkArea({ uploadedImageFiles, predictionResults, showResults, onDeleteImage, displayModes, setDisplayModes }) {
     const [showModal, setShowModal] = useState(false);
     const [modalImage, setModalImage] = useState('');
     const [showScroll, setShowScroll] = useState(false);
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [downloadIndex, setDownloadIndex] = useState(null);
 
     const handleImageClick = (imageSrc) => {
         setModalImage(imageSrc);
@@ -70,6 +74,61 @@ function MainWorkArea({ uploadedImageFiles, predictionResults, showResults, onDe
     const getDisplayImage = (result, index) => {
         if (!result || result === 'error') return null;
         return displayModes[index] === 'color' ? result.colorResult : result.binaryResult;
+    };
+
+    const handleDownloadClick = (event, index) => {
+        setAnchorEl(event.currentTarget);
+        setDownloadIndex(index);
+    };
+
+    const handleDownloadClose = () => {
+        setAnchorEl(null);
+        setDownloadIndex(null);
+    };
+
+    const downloadImage = (dataUrl, fileName) => {
+        const link = document.createElement('a');
+        link.href = dataUrl;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
+    const downloadCSV = (data, fileName) => {
+        const csvContent = "data:text/csv;charset=utf-8,"
+            + data.map(e => e.join(",")).join("\n");
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", fileName);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
+    const handleDownload = (type) => {
+        if (downloadIndex === null) return;
+        const result = predictionResults[downloadIndex];
+        const fileName = uploadedImageFiles[downloadIndex].file.name.split('.')[0];
+
+        switch(type) {
+            case 'binary':
+                downloadImage(result.binaryResult, `${fileName}_binary.png`);
+                break;
+            case 'color':
+                downloadImage(result.colorResult, `${fileName}_color.png`);
+                break;
+            case 'pixels':
+                downloadCSV(result.pixelsResult, `${fileName}_pixels.csv`);
+                break;
+            case 'all':
+                downloadImage(result.binaryResult, `${fileName}_binary.png`);
+                downloadImage(result.colorResult, `${fileName}_color.png`);
+                downloadCSV(result.pixelsResult, `${fileName}_pixels.csv`);
+                break;
+        }
+        handleDownloadClose();
     };
 
     return (
@@ -192,7 +251,14 @@ function MainWorkArea({ uploadedImageFiles, predictionResults, showResults, onDe
                                                         <IconButton color="primary" onClick={() => handleImageClick(getDisplayImage(predictionResults[index], index))}>
                                                             <ZoomInRoundedIcon />
                                                         </IconButton>
-                                                        <Button size="small" variant="outlined" startIcon={<DownloadRoundedIcon />}>Download</Button>
+                                                        <Button
+                                                            size="small"
+                                                            variant="outlined"
+                                                            startIcon={<DownloadRoundedIcon />}
+                                                            onClick={(event) => handleDownloadClick(event, index)}
+                                                        >
+                                                            Download
+                                                        </Button>
                                                     </CardActions>
                                                 </CardActionArea>
                                             </Card>
@@ -227,6 +293,16 @@ function MainWorkArea({ uploadedImageFiles, predictionResults, showResults, onDe
                     </TransformWrapper>
                 </Modal.Body>
             </Modal>
+            <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleDownloadClose}
+            >
+                <MenuItem onClick={() => handleDownload('binary')}>Download Binary Image</MenuItem>
+                <MenuItem onClick={() => handleDownload('color')}>Download Color Image</MenuItem>
+                <MenuItem onClick={() => handleDownload('pixels')}>Download Pixel Data (CSV)</MenuItem>
+                <MenuItem onClick={() => handleDownload('all')}>Download All</MenuItem>
+            </Menu>
             <Zoom in={showScroll}>
                 <Fab
                     color="primary"
