@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
@@ -21,6 +21,9 @@ import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 import SettingsIcon from '@mui/icons-material/Settings';
 import DeleteSweepRoundedIcon from '@mui/icons-material/DeleteSweepRounded';
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
+import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 
 const drawerWidth = 240;
 
@@ -88,10 +91,11 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
     }),
 );
 
-function MiniDrawer({ onFileUpload, onClearImages, onGetResult, onToggleAllDisplayModes, children }) {
+function MiniDrawer({ onFileUpload, onClearImages, onGetResult, onToggleAllDisplayModes, onDownloadAll, children }) {
     const theme = useTheme();
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
     const fileInputRef = React.useRef(null);
+    const [anchorEl, setAnchorEl] = useState(null);
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -109,6 +113,14 @@ function MiniDrawer({ onFileUpload, onClearImages, onGetResult, onToggleAllDispl
         const files = Array.from(event.target.files);
         onFileUpload(files);
         event.target.value = null;
+    };
+
+    const handleDownloadAllClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleDownloadAllClose = () => {
+        setAnchorEl(null);
     };
 
     return (
@@ -245,6 +257,27 @@ function MiniDrawer({ onFileUpload, onClearImages, onGetResult, onToggleAllDispl
                             <ListItemText primary="Toggle All" sx={{ opacity: open ? 1 : 0 }} />
                         </ListItemButton>
                     </ListItem>
+                    <ListItem disablePadding sx={{ display: 'block' }}>
+                        <ListItemButton
+                            onClick={handleDownloadAllClick}
+                            sx={{
+                                minHeight: 48,
+                                justifyContent: open ? 'initial' : 'center',
+                                px: 2.5,
+                            }}
+                        >
+                            <ListItemIcon
+                                sx={{
+                                    minWidth: 0,
+                                    mr: open ? 3 : 'auto',
+                                    justifyContent: 'center',
+                                }}
+                            >
+                                <DownloadRoundedIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Download All" sx={{ opacity: open ? 1 : 0 }} />
+                        </ListItemButton>
+                    </ListItem>
                 </List>
                 <Divider />
             </Drawer>
@@ -258,7 +291,18 @@ function MiniDrawer({ onFileUpload, onClearImages, onGetResult, onToggleAllDispl
                 ref={fileInputRef}
                 onChange={handleFileChange}
                 style={{ display: 'none' }}
+                accept="image/*"
             />
+            <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleDownloadAllClose}
+            >
+                <MenuItem onClick={() => { onDownloadAll('binary'); handleDownloadAllClose(); }}>Download All Binary Images (ZIP)</MenuItem>
+                <MenuItem onClick={() => { onDownloadAll('color'); handleDownloadAllClose(); }}>Download All Color Images (ZIP)</MenuItem>
+                <MenuItem onClick={() => { onDownloadAll('pixels'); handleDownloadAllClose(); }}>Download All Pixel Data (CSV)</MenuItem>
+                <MenuItem onClick={() => { onDownloadAll('all'); handleDownloadAllClose(); }}>Download All Types (ZIP)</MenuItem>
+            </Menu>
         </Box>
     );
 }

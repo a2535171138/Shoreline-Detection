@@ -11,15 +11,28 @@ function App() {
     const [showResults, setShowResults] = useState(false);
     const [processedImages, setProcessedImages] = useState(new Set());
     const [displayModes, setDisplayModes] = useState({});
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleFileUpload = (files) => {
-        const imageFiles = Array.from(files).map(file => ({
-            file,
-            url: URL.createObjectURL(file),
-            id: Date.now() + Math.random()
-        }));
-        setUploadedImageFiles(prevFiles => [...prevFiles, ...imageFiles]);
-        setPredictionResults(prevResults => [...prevResults, ...new Array(files.length).fill(null)]);
+        const imageFiles = Array.from(files)
+            .filter(file => {
+                // 只接受图片文件
+                return file.type.startsWith('image/');
+            })
+            .filter(file => {
+                // 避免重复上传同一张图片
+                return !uploadedImageFiles.some(uploadedFile => uploadedFile.file.name === file.name && uploadedFile.file.size === file.size);
+            })
+            .map(file => ({
+                file,
+                url: URL.createObjectURL(file),
+                id: Date.now() + Math.random()
+            }));
+
+        if (imageFiles.length > 0) {
+            setUploadedImageFiles(prevFiles => [...prevFiles, ...imageFiles]);
+            setPredictionResults(prevResults => [...prevResults, ...new Array(imageFiles.length).fill(null)]);
+        }
     };
 
     const handleToggleAllDisplayModes = () => {
@@ -95,12 +108,35 @@ function App() {
         }
     };
 
+    const handleDownloadAll = async (type) => {
+        setIsLoading(true);
+        try {
+            const response = await axios.get(`http://localhost:5000/download_all/${type}`, {
+                responseType: 'blob'
+            });
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            if (type === 'pixels') {
+                link.setAttribute('download', 'all_pixels_results.csv');
+            } else {
+                link.setAttribute('download', `all_${type}_results.zip`);
+            }
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+        } catch (error) {
+            console.error(`Error downloading ${type} results:`, error);
+        }
+    };
+
     return (
         <MiniDrawer
             onFileUpload={handleFileUpload}
             onClearImages={handleClearImages}
             onGetResult={handleGetResult}
             onToggleAllDisplayModes={handleToggleAllDisplayModes}
+            onDownloadAll={handleDownloadAll}
         >
             <MainWorkArea
                 uploadedImageFiles={uploadedImageFiles}
@@ -109,6 +145,7 @@ function App() {
                 showResults={showResults}
                 displayModes={displayModes}
                 setDisplayModes={setDisplayModes}
+                isLoading={isLoading}
             />
         </MiniDrawer>
     );

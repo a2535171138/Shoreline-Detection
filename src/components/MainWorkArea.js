@@ -20,6 +20,10 @@ import Zoom from '@mui/material/Zoom';
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import ZoomInIcon from '@mui/icons-material/ZoomIn';
+import ZoomOutIcon from '@mui/icons-material/ZoomOut';
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
+import CloseIcon from '@mui/icons-material/Close';
 
 function MainWorkArea({ uploadedImageFiles, predictionResults, showResults, onDeleteImage, displayModes, setDisplayModes }) {
     const [showModal, setShowModal] = useState(false);
@@ -27,6 +31,7 @@ function MainWorkArea({ uploadedImageFiles, predictionResults, showResults, onDe
     const [showScroll, setShowScroll] = useState(false);
     const [anchorEl, setAnchorEl] = useState(null);
     const [downloadIndex, setDownloadIndex] = useState(null);
+    const transformComponentRef = React.useRef(null);
 
     const handleImageClick = (imageSrc) => {
         setModalImage(imageSrc);
@@ -95,22 +100,32 @@ function MainWorkArea({ uploadedImageFiles, predictionResults, showResults, onDe
         document.body.removeChild(link);
     };
 
-    const downloadCSV = (data, fileName) => {
-        const csvContent = "data:text/csv;charset=utf-8,"
-            + data.map(e => e.join(",")).join("\n");
-        const encodedUri = encodeURI(csvContent);
-        const link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-        link.setAttribute("download", fileName);
+    const downloadCSV = (filename, pixelsResult) => {
+        // 创建CSV内容，添加path和WKT列标题
+        const csvContent = "path,WKT\n" + `${filename},${pixelsResult}`;
+
+        // 创建 Blob 对象
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+
+        // 创建下载链接
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', `${filename}_result.csv`);
+
+        // 触发下载
         document.body.appendChild(link);
         link.click();
+
+        // 清理
         document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
     };
 
     const handleDownload = (type) => {
         if (downloadIndex === null) return;
         const result = predictionResults[downloadIndex];
-        const fileName = uploadedImageFiles[downloadIndex].file.name.split('.')[0];
+        const fileName = uploadedImageFiles[downloadIndex].file.name;
 
         switch(type) {
             case 'binary':
@@ -120,12 +135,12 @@ function MainWorkArea({ uploadedImageFiles, predictionResults, showResults, onDe
                 downloadImage(result.colorResult, `${fileName}_color.png`);
                 break;
             case 'pixels':
-                downloadCSV(result.pixelsResult, `${fileName}_pixels.csv`);
+                downloadCSV(fileName, result.pixelsResult);
                 break;
             case 'all':
                 downloadImage(result.binaryResult, `${fileName}_binary.png`);
                 downloadImage(result.colorResult, `${fileName}_color.png`);
-                downloadCSV(result.pixelsResult, `${fileName}_pixels.csv`);
+                downloadCSV(fileName, result.pixelsResult);
                 break;
         }
         handleDownloadClose();
@@ -140,7 +155,7 @@ function MainWorkArea({ uploadedImageFiles, predictionResults, showResults, onDe
                             {uploadedImageFiles.map((image, index) => (
                                 <div key={index} className="col-3 mb-3">
                                     <Card>
-                                        <CardActionArea>
+                                        <CardActionArea onClick={() => handleImageClick(image.url)}>
                                             <CardMedia
                                                 component="img"
                                                 height="140"
@@ -190,7 +205,7 @@ function MainWorkArea({ uploadedImageFiles, predictionResults, showResults, onDe
                                 <div className="result-row mb-4">
                                     <div className="result-image">
                                         <Card>
-                                            <CardActionArea>
+                                            <CardActionArea onClick={() => handleImageClick(image.url)}>
                                                 <CardMedia
                                                     component="img"
                                                     height="140"
@@ -227,7 +242,7 @@ function MainWorkArea({ uploadedImageFiles, predictionResults, showResults, onDe
                                             </div>
                                         ) : (
                                             <Card>
-                                                <CardActionArea>
+                                                <CardActionArea onClick={() => handleImageClick(getDisplayImage(predictionResults[index], index))}>
                                                     <CardMedia
                                                         component="img"
                                                         height="140"
@@ -243,24 +258,24 @@ function MainWorkArea({ uploadedImageFiles, predictionResults, showResults, onDe
                                                             Processed on: {formatDate(predictionResults[index].processingTime)}
                                                         </Typography>
                                                     </CardContent>
-                                                    <CardActions>
-                                                        <IconButton color="primary" onClick={() => handleDisplayModeChange(index)}>
-                                                            <SwapHorizIcon />
-                                                        </IconButton>
-                                                        <div style={{ flex: 1 }} />
-                                                        <IconButton color="primary" onClick={() => handleImageClick(getDisplayImage(predictionResults[index], index))}>
-                                                            <ZoomInRoundedIcon />
-                                                        </IconButton>
-                                                        <Button
-                                                            size="small"
-                                                            variant="outlined"
-                                                            startIcon={<DownloadRoundedIcon />}
-                                                            onClick={(event) => handleDownloadClick(event, index)}
-                                                        >
-                                                            Download
-                                                        </Button>
-                                                    </CardActions>
                                                 </CardActionArea>
+                                                <CardActions>
+                                                    <IconButton color="primary" onClick={() => handleDisplayModeChange(index)}>
+                                                        <SwapHorizIcon />
+                                                    </IconButton>
+                                                    <div style={{ flex: 1 }} />
+                                                    <IconButton color="primary" onClick={() => handleImageClick(getDisplayImage(predictionResults[index], index))}>
+                                                        <ZoomInRoundedIcon />
+                                                    </IconButton>
+                                                    <Button
+                                                        size="small"
+                                                        variant="outlined"
+                                                        startIcon={<DownloadRoundedIcon />}
+                                                        onClick={(event) => handleDownloadClick(event, index)}
+                                                    >
+                                                        Download
+                                                    </Button>
+                                                </CardActions>
                                             </Card>
                                         )}
                                     </div>
@@ -272,25 +287,54 @@ function MainWorkArea({ uploadedImageFiles, predictionResults, showResults, onDe
                 )}
             </div>
             <Modal show={showModal} onHide={() => setShowModal(false)} size="xl" centered fullscreen>
-                <Modal.Body style={{ height: '90vh', display: 'flex', flexDirection: 'column' }}>
+                <Modal.Body style={{ height: '100vh', padding: 0, position: 'relative' }}>
                     <TransformWrapper
                         initialScale={1}
                         initialPositionX={0}
                         initialPositionY={0}
+                        ref={transformComponentRef}
                     >
-                        {({ zoomIn, zoomOut, resetTransform }) => (
-                            <React.Fragment>
-                                <div className="tools" style={{ marginBottom: '10px' }}>
-                                    <Button onClick={() => zoomIn()}>Zoom In</Button>
-                                    <Button onClick={() => zoomOut()}>Zoom Out</Button>
-                                    <Button onClick={() => resetTransform()}>Reset</Button>
-                                </div>
-                                <TransformComponent wrapperStyle={{ width: '100%', height: '100%' }}>
-                                    <img src={modalImage} alt="Enlarged" style={{maxWidth: '100%', maxHeight: '100%', objectFit: 'contain'}} />
-                                </TransformComponent>
-                            </React.Fragment>
-                        )}
+                        <TransformComponent wrapperStyle={{ width: '100%', height: '100%' }}>
+                            <img src={modalImage} alt="Enlarged" style={{maxWidth: '100%', maxHeight: '100%', objectFit: 'contain'}} />
+                        </TransformComponent>
                     </TransformWrapper>
+
+                    {/* Control Bar */}
+                    <div style={{
+                        position: 'absolute',
+                        bottom: 20,
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        backgroundColor: 'rgba(0,0,0,0.5)',
+                        borderRadius: 20,
+                        padding: '5px 10px',
+                        display: 'flex',
+                        gap: '10px'
+                    }}>
+                        <IconButton onClick={() => transformComponentRef.current?.zoomOut()} color="primary">
+                            <ZoomOutIcon />
+                        </IconButton>
+                        <IconButton onClick={() => transformComponentRef.current?.resetTransform()} color="primary">
+                            <RestartAltIcon />
+                        </IconButton>
+                        <IconButton onClick={() => transformComponentRef.current?.zoomIn()} color="primary">
+                            <ZoomInIcon />
+                        </IconButton>
+                    </div>
+
+                    {/* Close Button */}
+                    <IconButton
+                        onClick={() => setShowModal(false)}
+                        style={{
+                            position: 'absolute',
+                            top: 10,
+                            right: 10,
+                            backgroundColor: 'rgba(0,0,0,0.5)',
+                            color: 'white'
+                        }}
+                    >
+                        <CloseIcon />
+                    </IconButton>
                 </Modal.Body>
             </Modal>
             <Menu

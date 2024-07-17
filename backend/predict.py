@@ -367,7 +367,16 @@ def Dexined_predict(input_img, checkpoint_path, threshold = 200):
     color_result = replace_with_red(input_img, binary_result)
 
     coordinates = np.column_stack(np.where(binary_result > 0))
-    pixels_result = [tuple(coord) for coord in coordinates]
+#     pixels_result = [tuple(coord) for coord in coordinates]
+#       pixels_result = [[int(coord[1]), int(coord[0])] for coord in coordinates]
+    pixels_result = "MULTILINESTRING (("
+    for i, (y, x) in enumerate(coordinates):
+        pixels_result += f"{x:.4f} {y:.4f}"
+        if i < len(coordinates) - 1:
+            pixels_result += ", "
+        else:
+            pixels_result += "))"
+
 
     return binary_result, color_result, pixels_result
 
