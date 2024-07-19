@@ -102,7 +102,8 @@ function MainWorkArea({ uploadedImageFiles, predictionResults, showResults, onDe
 
     const downloadCSV = (filename, pixelsResult) => {
         // 创建CSV内容，添加path和WKT列标题
-        const csvContent = "path,WKT\n" + `${filename},${pixelsResult}`;
+        // const csvContent = "path,WKT\n" + `${filename},${pixelsResult}`;
+        const csvContent = `path,WKT\n${filename},${pixelsResult}`;
 
         // 创建 Blob 对象
         const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -142,6 +143,8 @@ function MainWorkArea({ uploadedImageFiles, predictionResults, showResults, onDe
                 downloadImage(result.colorResult, `${fileName}_color.png`);
                 downloadCSV(fileName, result.pixelsResult);
                 break;
+            default:
+                console.error(`Unknown download type: ${type}`);
         }
         handleDownloadClose();
     };
@@ -170,16 +173,16 @@ function MainWorkArea({ uploadedImageFiles, predictionResults, showResults, onDe
                                                     Uploaded on: {new Date(image.file.lastModified).toLocaleString()} <br />
                                                 </Typography>
                                             </CardContent>
-                                            <CardActions>
-                                                <div style={{ flex: 1 }} />
-                                                <IconButton color="primary" onClick={() => handleImageClick(image.url)}>
-                                                    <ZoomInRoundedIcon />
-                                                </IconButton>
-                                                <IconButton color="error" onClick={() => onDeleteImage(index)}>
-                                                    <DeleteRoundedIcon />
-                                                </IconButton>
-                                            </CardActions>
                                         </CardActionArea>
+                                        <CardActions>
+                                            <div style={{ flex: 1 }} />
+                                            <IconButton color="primary" onClick={() => handleImageClick(image.url)}>
+                                                <ZoomInRoundedIcon />
+                                            </IconButton>
+                                            <IconButton color="error" onClick={() => onDeleteImage(index)}>
+                                                <DeleteRoundedIcon />
+                                            </IconButton>
+                                        </CardActions>
                                     </Card>
                                 </div>
                             ))}

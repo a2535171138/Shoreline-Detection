@@ -356,29 +356,101 @@ def skeletonize(image):
             done = True
     return skel
 
+# def Dexined_predict(input_img, checkpoint_path, threshold = 200):
+#     predicted_img = predict(checkpoint_path, input_img)
+#
+#     _, binary_image = cv2.threshold(predicted_img, threshold, 255, cv2.THRESH_BINARY)
+#     filled_image = fill_holes(binary_image)
+#     binary_result = skeletonize(filled_image)
+#
+#     input_img = cv2.cvtColor(input_img, cv2.COLOR_BGR2RGB)
+#     color_result = replace_with_red(input_img, binary_result)
+#
+#     coordinates = np.column_stack(np.where(binary_result > 0))
+# #     pixels_result = [tuple(coord) for coord in coordinates]
+# #       pixels_result = [[int(coord[1]), int(coord[0])] for coord in coordinates]
+#     pixels_result = "MULTILINESTRING (("
+#     for i, (y, x) in enumerate(coordinates):
+#         pixels_result += f"{x:.4f} {y:.4f}"
+#         if i < len(coordinates) - 1:
+#             pixels_result += ", "
+#         else:
+#             pixels_result += "))"
+#
+#
+#     return binary_result, color_result, pixels_result
+
+def remove_noise(image, min_size):
+    nb_components, output, stats, centroids = cv2.connectedComponentsWithStats(image, connectivity=8)
+    sizes = stats[1:, -1]
+    nb_components = nb_components - 1
+
+    img2 = np.zeros((output.shape), np.uint8)
+    for i in range(0, nb_components):
+        if sizes[i] >= min_size:
+            img2[output == i + 1] = 255
+    return img2
+
 def Dexined_predict(input_img, checkpoint_path, threshold = 200):
     predicted_img = predict(checkpoint_path, input_img)
+    # plt.imshow(predicted_img)
+    # plt.axis('off')
+    # plt.show()
 
-    _, binary_image = cv2.threshold(predicted_img, threshold, 255, cv2.THRESH_BINARY)
-    filled_image = fill_holes(binary_image)
-    binary_result = skeletonize(filled_image)
+    # print(predicted_img)
+    # print("Predicted Image Range:", predicted_img.min(), predicted_img.max())
+    if len(predicted_img.shape) == 3:
+      predicted_img = cv2.cvtColor(predicted_img, cv2.COLOR_BGR2GRAY)
 
-    input_img = cv2.cvtColor(input_img, cv2.COLOR_BGR2RGB)
+
+    # binary_image = predicted_img
+    _, binary_image = cv2.threshold(predicted_img, 200, 255, cv2.THRESH_BINARY)
+
+
+    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (21, 21))
+    binary_image = cv2.morphologyEx(binary_image, cv2.MORPH_CLOSE, kernel)
+    binary_result = skeletonize(binary_image)
+
+
+    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))
+    binary_result = cv2.morphologyEx(binary_result, cv2.MORPH_CLOSE, kernel)
+    # print('5')
+    # plt.imshow(binary_result)
+    # plt.axis('off')
+    # plt.show()
+
+    binary_result = remove_noise(binary_result, 7)
+    # print('noise')
+    # plt.imshow(binary_result)
+    # plt.axis('off')
+    # plt.show()
+
     color_result = replace_with_red(input_img, binary_result)
+    # print('color-5')
+    # plt.imshow(color_result)
+    # plt.axis('off')
+    # plt.show()
+
+    # filled_image = fill_holes(binary_image)
+
+    # binary_result = skeletonize(filled_image)
+    # filter_binary_result = remove_single_pixel_noise(binary_result)
+
+    # input_img = cv2.cvtColor(input_img, cv2.COLOR_BGR2RGB)
+    # color_result = replace_with_red(input_img, binary_result)
 
     coordinates = np.column_stack(np.where(binary_result > 0))
-#     pixels_result = [tuple(coord) for coord in coordinates]
-#       pixels_result = [[int(coord[1]), int(coord[0])] for coord in coordinates]
     pixels_result = "MULTILINESTRING (("
-    for i, (y, x) in enumerate(coordinates):
+    for i, (y, x) in enumerate(coordinates):  # 缩进修正
         pixels_result += f"{x:.4f} {y:.4f}"
         if i < len(coordinates) - 1:
             pixels_result += ", "
         else:
             pixels_result += "))"
 
+    # return filled_image, binary_result, filter_binary_result, color_result
 
-    return binary_result, color_result, pixels_result
+    return binary_result,color_result,pixels_result
 
 # def main(checkpoint_path, input_csv, nums, threshold):
 #   df = pd.read_csv(input_csv)

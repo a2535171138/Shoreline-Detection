@@ -18,7 +18,7 @@ CORS(app)
 # 配置
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 限制上传大小为16MB
 app.config['UPLOAD_EXTENSIONS'] = ['.jpg', '.png', '.jpeg']
-app.config['CHECKPOINT_PATH'] = "/home/yiting/coaste-detect/backend/29_model.pth"
+app.config['CHECKPOINT_PATH'] = "/home/yiting/coaste-detect/backend/19_model.pth"
 app.config['THRESHOLD'] = 200  # 可以根据需要调整阈值
 
 # 配置日志
