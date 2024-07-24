@@ -7,7 +7,10 @@ from datetime import datetime
 import logging
 from werkzeug.utils import secure_filename
 import os
-from predict import Dexined_predict  # 确保这个导入是正确的
+from predict import Dexined_predict
+from quality import evaluate_image_quality
+from classify import classify_image
+from PIL import Image
 import json
 import io
 import zipfile
@@ -20,9 +23,12 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 限制上传大小为16MB
 app.config['UPLOAD_EXTENSIONS'] = ['.jpg', '.png', '.jpeg']
 app.config['CHECKPOINT_PATH'] = "/home/yiting/coaste-detect/backend/19_model.pth"
 app.config['THRESHOLD'] = 200  # 可以根据需要调整阈值
+app.config['CLASSIFICATION_MODEL_PATH'] = "/home/yiting/coaste-detect/backend/coast_classifier.pth"  # 确保这个路径是正确的
+app.config['ENABLE_QUALITY_CHECK'] = False
 
 # 配置日志
 logging.basicConfig(level=logging.DEBUG)
+
 
 class NumpyEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -34,11 +40,21 @@ class NumpyEncoder(json.JSONEncoder):
             return obj.tolist()
         return json.JSONEncoder.default(self, obj)
 
+
 # 全局变量来存储处理结果
 processed_results = []
 
+
+@app.route('/toggle_quality_check', methods=['POST'])
+def toggle_quality_check():
+    app.config['ENABLE_QUALITY_CHECK'] = not app.config['ENABLE_QUALITY_CHECK']
+    return jsonify({'enabled': app.config['ENABLE_QUALITY_CHECK']})
+
+
 @app.route('/predict', methods=['POST'])
 def predict_route():
+    app.logger.info(f"Quality check enabled: {app.config['ENABLE_QUALITY_CHECK']}")
+
     if 'file' not in request.files:
         return jsonify({'error': 'No file part'}), 400
 
@@ -52,6 +68,20 @@ def predict_route():
     try:
         # 读取图像
         image = cv2.imdecode(np.frombuffer(file.read(), np.uint8), cv2.IMREAD_COLOR)
+
+        if app.config['ENABLE_QUALITY_CHECK']:
+            # 质量控制
+            quality_result = evaluate_image_quality(image)
+            if quality_result != 0:
+                quality_messages = {1: "Low Contrast", 2: "Underexposed", 3: "Overexposed"}
+                return jsonify({
+                    'error': f'Image quality check failed: {quality_messages.get(quality_result, "Unknown issue")}'}), 400
+
+            # 图像分类
+            pil_image = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+            classification_result = classify_image(pil_image, app.config['CLASSIFICATION_MODEL_PATH'])
+            if classification_result != 1:  # 假设1表示海岸线图片
+                return jsonify({'error': 'Image is not classified as a coastline'}), 400
 
         # 使用预测函数
         binary_result, color_result, pixels_result = Dexined_predict(
@@ -86,10 +116,13 @@ def predict_route():
 
     except Exception as e:
         app.logger.error(f"Prediction failed: {str(e)}", exc_info=True)
-        return jsonify({'error': 'Prediction failed', 'details': str(e)}), 500
+        return jsonify({'error': f'Prediction failed: {str(e)}'}), 500
+
 
 @app.route('/download_all', methods=['GET'])
 def download_all():
+    if not processed_results:
+        return jsonify({'error': 'No results to download'}), 400
     csv_content = "path,rectified site,camera,type,obstructi,downward,low,shadow,label\n"  # CSV 头部
     for item in processed_results:
         # 使用文件名作为路径
@@ -110,8 +143,11 @@ def download_all():
         download_name='all_results.csv'
     )
 
+
 @app.route('/download_all/<type>', methods=['GET'])
 def download_all_type(type):
+    if not processed_results:
+        return jsonify({'error': 'No results to download'}), 400
     if type == 'pixels':
         csv_content = "path,rectified site,camera,type,obstructi,downward,low,shadow,label\n"
         for item in processed_results:
@@ -150,6 +186,14 @@ def download_all_type(type):
             as_attachment=True,
             download_name=f'all_{type}_results.zip'
         )
+
+
+@app.route('/clear_results', methods=['POST'])
+def clear_results():
+    global processed_results
+    processed_results = []
+    return jsonify({'message': 'All results cleared'}), 200
+
 
 if __name__ == '__main__':
     app.run(debug=True)

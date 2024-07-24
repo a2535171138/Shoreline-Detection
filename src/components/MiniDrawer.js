@@ -24,6 +24,10 @@ import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import FilterIcon from '@mui/icons-material/Filter';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import Switch from '@mui/material/Switch';
 
 const drawerWidth = 240;
 
@@ -91,7 +95,9 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
     }),
 );
 
-function MiniDrawer({ onFileUpload, onClearImages, onGetResult, onToggleAllDisplayModes, onDownloadAll, children }) {
+
+function MiniDrawer({ onFileUpload, onClearImages, onGetResult, onToggleAllDisplayModes, onDownloadAll, children,  onToggleQualityCheck,qualityCheckEnabled,hasResults,onSwitchView,
+                        currentView,}) {
     const theme = useTheme();
     const [open, setOpen] = useState(false);
     const fileInputRef = React.useRef(null);
@@ -153,6 +159,27 @@ function MiniDrawer({ onFileUpload, onClearImages, onGetResult, onToggleAllDispl
                 </DrawerHeader>
                 <Divider />
                 <List>
+                    <ListItem disablePadding sx={{ display: 'block' }}>
+                        <ListItemButton
+                            onClick={onSwitchView}
+                            sx={{
+                                minHeight: 48,
+                                justifyContent: open ? 'initial' : 'center',
+                                px: 2.5,
+                            }}
+                        >
+                            <ListItemIcon
+                                sx={{
+                                    minWidth: 0,
+                                    mr: open ? 3 : 'auto',
+                                    justifyContent: 'center',
+                                }}
+                            >
+                                {currentView === 'upload' ? <VisibilityIcon /> : <CloudUploadIcon />}
+                            </ListItemIcon>
+                            <ListItemText primary={currentView === 'upload' ? "View Results" : "Upload Images"} sx={{ opacity: open ? 1 : 0 }} />
+                        </ListItemButton>
+                    </ListItem>
                     <ListItem disablePadding sx={{ display: 'block' }}>
                         <ListItemButton
                             onClick={handleUploadClick}
@@ -259,7 +286,33 @@ function MiniDrawer({ onFileUpload, onClearImages, onGetResult, onToggleAllDispl
                     </ListItem>
                     <ListItem disablePadding sx={{ display: 'block' }}>
                         <ListItemButton
+                            sx={{
+                                minHeight: 48,
+                                justifyContent: open ? 'initial' : 'center',
+                                px: 2.5,
+                            }}
+                        >
+                            <ListItemIcon
+                                sx={{
+                                    minWidth: 0,
+                                    mr: open ? 3 : 'auto',
+                                    justifyContent: 'center',
+                                }}
+                            >
+                                <FilterIcon color={qualityCheckEnabled ? "primary" : "inherit"} />
+                            </ListItemIcon>
+                            <ListItemText primary="Quality Check" sx={{ opacity: open ? 1 : 0 }} />
+                            <Switch
+                                edge="end"
+                                onChange={onToggleQualityCheck}
+                                checked={qualityCheckEnabled}
+                                color="primary"
+                                size="small"
+                            />
+                        </ListItemButton>
+                        <ListItemButton
                             onClick={handleDownloadAllClick}
+                            disabled={!hasResults}
                             sx={{
                                 minHeight: 48,
                                 justifyContent: open ? 'initial' : 'center',
@@ -278,6 +331,7 @@ function MiniDrawer({ onFileUpload, onClearImages, onGetResult, onToggleAllDispl
                             <ListItemText primary="Download All" sx={{ opacity: open ? 1 : 0 }} />
                         </ListItemButton>
                     </ListItem>
+
                 </List>
                 <Divider />
             </Drawer>

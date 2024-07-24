@@ -177,7 +177,8 @@ class DexiNed(nn.Module):
         self.side_2 = SingleConvBlock(128, 256, 2)
         self.side_3 = SingleConvBlock(256, 512, 2)
         self.side_4 = SingleConvBlock(512, 512, 1)
-        self.side_5 = SingleConvBlock(512, 256, 1) # Sory I forget to comment this line :(
+        self.side_5 = SingleConvBlock(512, 256, 1)
+        # Sory I forget to comment this line :(
 
         # right skip connections, figure in Journal paper
         self.pre_dense_2 = SingleConvBlock(128, 256, 2)
@@ -192,7 +193,8 @@ class DexiNed(nn.Module):
         self.up_block_4 = UpConvBlock(512, 3)
         self.up_block_5 = UpConvBlock(512, 4)
         self.up_block_6 = UpConvBlock(256, 4)
-        self.block_cat = SingleConvBlock(6, 1, stride=1, use_bs=False) # hed fusion method
+        self.block_cat = SingleConvBlock(6, 1, stride=1, use_bs=False)
+         # hed fusion method
         # self.block_cat = CoFusion(6,6)# cats fusion method
 
         self.apply(weight_init)

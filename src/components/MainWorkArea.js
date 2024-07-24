@@ -25,7 +25,7 @@ import ZoomOutIcon from '@mui/icons-material/ZoomOut';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import CloseIcon from '@mui/icons-material/Close';
 
-function MainWorkArea({ uploadedImageFiles, predictionResults, showResults, onDeleteImage, displayModes, setDisplayModes }) {
+function MainWorkArea({ uploadedImageFiles, predictionResults, showResults, onDeleteImage, displayModes, setDisplayModes,currentView,onFileUpload }) {
     const [showModal, setShowModal] = useState(false);
     const [modalImage, setModalImage] = useState('');
     const [showScroll, setShowScroll] = useState(false);
@@ -152,7 +152,7 @@ function MainWorkArea({ uploadedImageFiles, predictionResults, showResults, onDe
     return (
         <div className="container-fluid p-3 d-flex flex-column">
             <div className="image-display border p-3 mb-4 flex-grow-1 overflow-auto">
-                {!showResults ? (
+                {currentView === 'upload' ? (
                     uploadedImageFiles.length > 0 ? (
                         <div className="row">
                             {uploadedImageFiles.map((image, index) => (
@@ -202,7 +202,7 @@ function MainWorkArea({ uploadedImageFiles, predictionResults, showResults, onDe
                                 <div className="d-flex justify-content-between align-items-center mb-2">
                                     <Typography variant="h5">Image {index + 1}</Typography>
                                     <Button size="small" variant="outlined" color="error" startIcon={<DeleteRoundedIcon />} onClick={() => onDeleteImage(index)}>
-                                        Delete
+                                        Delete Result
                                     </Button>
                                 </div>
                                 <div className="result-row mb-4">
@@ -239,9 +239,9 @@ function MainWorkArea({ uploadedImageFiles, predictionResults, showResults, onDe
                                                 <ClipLoader color="#007bff" loading={true} size={50} />
                                                 <p>Processing...</p>
                                             </div>
-                                        ) : predictionResults[index] === 'error' ? (
+                                        ) : predictionResults[index].error ? (
                                             <div className="error-placeholder">
-                                                <p>Error processing image. Please try again or contact support if the problem persists.</p>
+                                                <p>{predictionResults[index].error}</p>
                                             </div>
                                         ) : (
                                             <Card>
