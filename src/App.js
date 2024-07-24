@@ -1,13 +1,16 @@
-import React, {useRef, useState} from 'react';
+import React, { useRef, useState } from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import MiniDrawer from './components/MiniDrawer';
 import MainWorkArea from './components/MainWorkArea';
 import axios from 'axios';
 import Alert from '@mui/material/Alert';
-import Button from "@mui/material/Button";
+import { LogProvider, useLog } from './LogContext';
+import SnackbarLog from './components/SnackbarLog';
+import LogViewer from "./components/LogViewer";
 
-function App() {
+function AppContent() {
+    const { addLog } = useLog();
     const [uploadedImageFiles, setUploadedImageFiles] = useState([]);
     const [predictionResults, setPredictionResults] = useState([]);
     const [showResults, setShowResults] = useState(false);
@@ -15,44 +18,36 @@ function App() {
     const [displayModes, setDisplayModes] = useState({});
     const [isLoading, setIsLoading] = useState(false);
     const [duplicateImageWarning, setDuplicateImageWarning] = useState(false);
-    const [qualityControlEnabled, setQualityControlEnabled] = useState(false);
-    const [classificationEnabled, setClassificationEnabled] = useState(false);
     const [qualityCheckEnabled, setQualityCheckEnabled] = useState(false);
     const [hasResults, setHasResults] = useState(false);
-    const [currentView, setCurrentView] = useState('upload'); // 'upload' 或 'results'
+    const [currentView, setCurrentView] = useState('upload');
+    const [logViewerOpen, setLogViewerOpen] = useState(false);
+
+    const handleViewLogs = () => {
+        setLogViewerOpen(true);
+    };
+
+    const handleCloseLogViewer = () => {
+        setLogViewerOpen(false);
+    };
 
     const fileInputRef = useRef(null);
-
-    const toggleQualityControl = async () => {
-        try {
-            const response = await axios.post('http://localhost:5000/toggle_quality_control');
-            setQualityControlEnabled(response.data.enabled);
-        } catch (error) {
-            console.error('Error toggling quality control:', error);
-        }
-    };
-
-    const toggleClassification = async () => {
-        try {
-            const response = await axios.post('http://localhost:5000/toggle_classification');
-            setClassificationEnabled(response.data.enabled);
-        } catch (error) {
-            console.error('Error toggling classification:', error);
-        }
-    };
 
     const toggleQualityCheck = async () => {
         try {
             const response = await axios.post('http://localhost:5000/toggle_quality_check');
             setQualityCheckEnabled(response.data.enabled);
+            addLog(`Quality check ${response.data.enabled ? 'enabled' : 'disabled'}`, 'info');
             return response.data.enabled;
         } catch (error) {
+            addLog('Failed to toggle quality check', 'error');
             console.error('Error toggling quality check:', error);
-            return qualityCheckEnabled; // 保持原状态不变
+            return qualityCheckEnabled;
         }
     };
 
     const handleFileUpload = (files) => {
+        setCurrentView('upload');
         const imageFiles = Array.from(files)
             .filter(file => file.type.startsWith('image/'));
 
@@ -78,6 +73,9 @@ function App() {
         if (newImageFiles.length > 0) {
             setUploadedImageFiles(prevFiles => [...prevFiles, ...newImageFiles]);
             setPredictionResults(prevResults => [...prevResults, ...new Array(newImageFiles.length).fill(null)]);
+            addLog(`Uploaded ${imageFiles.length} image(s)`, 'success');
+        } else {
+            addLog('No valid image files were selected', 'warning');
         }
         if (fileInputRef.current) {
             fileInputRef.current.value = '';
@@ -99,7 +97,6 @@ function App() {
     const handleDeleteImage = async (index) => {
         const file = uploadedImageFiles[index];
         try {
-            // 向后端发送删除请求
             await axios.delete(`http://localhost:5000/delete_result/${file.file.name}`);
         } catch (error) {
             console.error('Error deleting prediction result:', error);
@@ -115,6 +112,7 @@ function App() {
             });
             return newFiles;
         });
+        addLog(`Deleted image: ${file.file.name}`, 'info');
     };
 
     const handleClearImages = async () => {
@@ -127,57 +125,71 @@ function App() {
             setPredictionResults([]);
             setProcessedImages(new Set());
             setShowResults(false);
+            setHasResults(false);
+            addLog('All images and results cleared', 'info');
         } catch (error) {
             console.error('Error clearing results:', error);
+            addLog('Failed to clear all images and results', 'error');
         }
-        setHasResults(false);
     };
 
     const handleGetResult = async () => {
-        if (uploadedImageFiles.length > 0) {
-            setShowResults(true);
-            setCurrentView('results');
-            const newPredictionResults = [...predictionResults];
+        setCurrentView('results');
+        if (uploadedImageFiles.length === 0) {
+            addLog("No images to process", "warning");
+            return;
+        }
 
-            for (let i = 0; i < uploadedImageFiles.length; i++) {
-                const imageFile = uploadedImageFiles[i];
-                if (!processedImages.has(imageFile.id)) {
-                    const formData = new FormData();
-                    formData.append('file', imageFile.file);
+        addLog("Starting image processing...", "info");
+        setShowResults(true);
+        const newPredictionResults = [...predictionResults];
 
-                    try {
-                        const response = await axios.post('http://localhost:5000/predict', formData, {
-                            headers: {
-                                'Content-Type': 'multipart/form-data'
-                            }
-                        });
+        for (let i = 0; i < uploadedImageFiles.length; i++) {
+            const imageFile = uploadedImageFiles[i];
+            if (!processedImages.has(imageFile.id)) {
+                const formData = new FormData();
+                formData.append('file', imageFile.file);
 
-                        newPredictionResults[i] = {
-                            ...newPredictionResults[i],
-                            binaryResult: `data:image/png;base64,${response.data.binary_result}`,
-                            colorResult: `data:image/png;base64,${response.data.color_result}`,
-                            pixelsResult: response.data.pixels_result,
-                            processingTime: response.data.processingTime,
-                        };
+                try {
+                    addLog(`Processing image: ${imageFile.file.name}`, "info");
+                    const response = await axios.post('http://localhost:5000/predict', formData, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    });
 
-                        setProcessedImages(prev => new Set(prev).add(imageFile.id));
-                    } catch (error) {
-                        console.error('Error fetching prediction result:', error);
-                        newPredictionResults[i] = {
-                            error: error.response?.data?.error || 'Unknown error occurred'
-                        };
-                    }
-                    setPredictionResults([...newPredictionResults]);
-                    if (newPredictionResults.some(result => result !== null && result !== 'error')) {
-                        setHasResults(true);
-                    }
+                    newPredictionResults[i] = {
+                        ...newPredictionResults[i],
+                        binaryResult: `data:image/png;base64,${response.data.binary_result}`,
+                        colorResult: `data:image/png;base64,${response.data.color_result}`,
+                        pixelsResult: response.data.pixels_result,
+                        processingTime: response.data.processingTime,
+                    };
+
+                    setProcessedImages(prev => new Set(prev).add(imageFile.id));
+                    addLog(`Successfully processed image: ${imageFile.file.name}`, "success");
+                } catch (error) {
+                    console.error('Error fetching prediction result:', error);
+                    newPredictionResults[i] = {
+                        error: error.response?.data?.error || 'Unknown error occurred'
+                    };
+                    addLog(`Failed to process image: ${imageFile.file.name}. ${error.response?.data?.error || 'Unknown error occurred'}`, "error");
                 }
+            } else {
+                addLog(`Image already processed: ${imageFile.file.name}`, "info");
             }
         }
-    };
-    const switchToUploadView = () => {
-        setCurrentView('upload');
-        setShowResults(false);
+
+        setPredictionResults([...newPredictionResults]);
+
+        const successfullyProcessed = newPredictionResults.filter(result => !result.error).length;
+        const failedToProcess = newPredictionResults.filter(result => result.error).length;
+
+        addLog(`Processing complete. Successfully processed: ${successfullyProcessed}, Failed: ${failedToProcess}`, "info");
+
+        if (successfullyProcessed > 0) {
+            setHasResults(true);
+        }
     };
 
     const handleDownloadAll = async (type) => {
@@ -189,7 +201,6 @@ function App() {
                 responseType: 'blob'
             });
 
-            // 检查是否有结果可下载
             if (response.status === 400) {
                 throw new Error('No results to download');
             }
@@ -205,59 +216,72 @@ function App() {
             document.body.appendChild(link);
             link.click();
             link.remove();
+            addLog(`Downloaded all ${type} results`, 'success');
         } catch (error) {
             console.error(`Error downloading ${type} results:`, error);
-            // 显示错误消息给用户
             alert(error.message || `Error downloading ${type} results`);
+            addLog(`Failed to download ${type} results`, 'error');
         }
         setIsLoading(false);
     };
 
     return (
-        <MiniDrawer
-            onFileUpload={() => fileInputRef.current.click()}
-            onClearImages={handleClearImages}
-            onGetResult={handleGetResult}
-            onToggleAllDisplayModes={handleToggleAllDisplayModes}
-            onDownloadAll={handleDownloadAll}
-            onToggleQualityCheck={async () => {
-                const newState = await toggleQualityCheck();
-                setQualityCheckEnabled(newState);
-            }}
-            qualityCheckEnabled={qualityCheckEnabled}
-            hasResults={hasResults}
-            onSwitchView={() => setCurrentView(currentView === 'upload' ? 'results' : 'upload')}
-            currentView={currentView}
-        >
-            {duplicateImageWarning && (
-                <Alert severity="warning" onClose={() => setDuplicateImageWarning(false)}>
-                    Duplicate image(s) detected. Please select a different image.
-                </Alert>
-            )}
 
-            <input
-                type="file"
-                multiple
-                onChange={(e) => handleFileUpload(e.target.files)}
-                style={{ display: 'none' }}
-                ref={fileInputRef}
-                accept="image/*"
-            />
-
-            <MainWorkArea
-                uploadedImageFiles={uploadedImageFiles}
-                onDeleteImage={handleDeleteImage}
-                predictionResults={predictionResults}
-                showResults={showResults}
-                displayModes={displayModes}
-                setDisplayModes={setDisplayModes}
-                isLoading={isLoading}
-                currentView={currentView}
+            <MiniDrawer
                 onFileUpload={() => fileInputRef.current.click()}
-            />
-        </MiniDrawer>
+                onClearImages={handleClearImages}
+                onGetResult={handleGetResult}
+                onToggleAllDisplayModes={handleToggleAllDisplayModes}
+                onDownloadAll={handleDownloadAll}
+                onToggleQualityCheck={async () => {
+                    const newState = await toggleQualityCheck();
+                    setQualityCheckEnabled(newState);
+                }}
+                qualityCheckEnabled={qualityCheckEnabled}
+                hasResults={hasResults}
+                onSwitchView={() => setCurrentView(currentView === 'upload' ? 'results' : 'upload')}
+                currentView={currentView}
+                onViewLogs={handleViewLogs}
+            >
+                {duplicateImageWarning && (
+                    <Alert severity="warning" onClose={() => setDuplicateImageWarning(false)}>
+                        Duplicate image(s) detected. Please select a different image.
+                    </Alert>
+                )}
+
+                <input
+                    type="file"
+                    multiple
+                    onChange={(e) => handleFileUpload(e.target.files)}
+                    style={{ display: 'none' }}
+                    ref={fileInputRef}
+                    accept="image/*"
+                />
+
+                <MainWorkArea
+                    uploadedImageFiles={uploadedImageFiles}
+                    onDeleteImage={handleDeleteImage}
+                    predictionResults={predictionResults}
+                    showResults={showResults}
+                    displayModes={displayModes}
+                    setDisplayModes={setDisplayModes}
+                    isLoading={isLoading}
+                    currentView={currentView}
+                    onFileUpload={() => fileInputRef.current.click()}
+                />
+                <LogViewer open={logViewerOpen} onClose={handleCloseLogViewer} />
+            </MiniDrawer>
+
     );
 }
 
+function App() {
+    return (
+        <LogProvider>
+            <AppContent />
+            <SnackbarLog />
+        </LogProvider>
+    );
+}
 
 export default App;

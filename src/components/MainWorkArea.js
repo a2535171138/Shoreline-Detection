@@ -24,8 +24,10 @@ import ZoomInIcon from '@mui/icons-material/ZoomIn';
 import ZoomOutIcon from '@mui/icons-material/ZoomOut';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import CloseIcon from '@mui/icons-material/Close';
+import {useLog} from "../LogContext";
 
 function MainWorkArea({ uploadedImageFiles, predictionResults, showResults, onDeleteImage, displayModes, setDisplayModes,currentView,onFileUpload }) {
+    const { addLog } = useLog();
     const [showModal, setShowModal] = useState(false);
     const [modalImage, setModalImage] = useState('');
     const [showScroll, setShowScroll] = useState(false);
@@ -148,6 +150,7 @@ function MainWorkArea({ uploadedImageFiles, predictionResults, showResults, onDe
         }
         handleDownloadClose();
     };
+
 
     return (
         <div className="container-fluid p-3 d-flex flex-column">

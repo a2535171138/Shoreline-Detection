@@ -28,6 +28,7 @@ import FilterIcon from '@mui/icons-material/Filter';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import Switch from '@mui/material/Switch';
+import HistoryIcon from '@mui/icons-material/History';
 
 const drawerWidth = 240;
 
@@ -97,7 +98,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 
 function MiniDrawer({ onFileUpload, onClearImages, onGetResult, onToggleAllDisplayModes, onDownloadAll, children,  onToggleQualityCheck,qualityCheckEnabled,hasResults,onSwitchView,
-                        currentView,}) {
+                        currentView,onViewLogs }) {
     const theme = useTheme();
     const [open, setOpen] = useState(false);
     const fileInputRef = React.useRef(null);
@@ -329,6 +330,27 @@ function MiniDrawer({ onFileUpload, onClearImages, onGetResult, onToggleAllDispl
                                 <DownloadRoundedIcon />
                             </ListItemIcon>
                             <ListItemText primary="Download All" sx={{ opacity: open ? 1 : 0 }} />
+                        </ListItemButton>
+                    </ListItem>
+                    <ListItem disablePadding sx={{ display: 'block' }}>
+                        <ListItemButton
+                            onClick={onViewLogs}
+                            sx={{
+                                minHeight: 48,
+                                justifyContent: open ? 'initial' : 'center',
+                                px: 2.5,
+                            }}
+                        >
+                            <ListItemIcon
+                                sx={{
+                                    minWidth: 0,
+                                    mr: open ? 3 : 'auto',
+                                    justifyContent: 'center',
+                                }}
+                            >
+                                <HistoryIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="View Logs" sx={{ opacity: open ? 1 : 0 }} />
                         </ListItemButton>
                     </ListItem>
 
