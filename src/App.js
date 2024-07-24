@@ -79,6 +79,9 @@ function App() {
             setUploadedImageFiles(prevFiles => [...prevFiles, ...newImageFiles]);
             setPredictionResults(prevResults => [...prevResults, ...new Array(newImageFiles.length).fill(null)]);
         }
+        if (fileInputRef.current) {
+            fileInputRef.current.value = '';
+        }
     };
 
     const handleToggleAllDisplayModes = () => {

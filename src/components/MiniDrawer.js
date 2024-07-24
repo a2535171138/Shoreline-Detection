@@ -182,7 +182,7 @@ function MiniDrawer({ onFileUpload, onClearImages, onGetResult, onToggleAllDispl
                     </ListItem>
                     <ListItem disablePadding sx={{ display: 'block' }}>
                         <ListItemButton
-                            onClick={handleUploadClick}
+                            onClick={onFileUpload}
                             sx={{
                                 minHeight: 48,
                                 justifyContent: open ? 'initial' : 'center',
