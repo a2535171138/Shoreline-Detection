@@ -16,6 +16,7 @@
     "react-bootstrap": "^2.10.4",
     "react-dom": "^18.3.1",
     "react-easy-crop": "^5.0.7",
+    "react-router-dom": "^6.25.1",
     "react-scripts": "5.0.1",
     "react-spinners": "^0.14.1",
     "react-zoom-pan-pinch": "^3.6.1",
@@ -47,8 +48,13 @@
     ]
   },
   "devDependencies": {
+    "@cypress/react18": "^2.0.1",
+    "@cypress/webpack-dev-server": "^3.10.0",
+    "@testing-library/react": "^16.0.0",
     "concurrently": "^8.2.2",
     "cross-env": "^7.0.3",
+    "cypress": "^13.13.1",
+    "cypress-file-upload": "^5.0.8",
     "electron": "^31.0.2",
     "electron-is-dev": "^3.0.1",
     "wait-on": "^7.2.0"

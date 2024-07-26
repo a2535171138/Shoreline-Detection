@@ -8,6 +8,8 @@ import Alert from '@mui/material/Alert';
 import { LogProvider, useLog } from './LogContext';
 import SnackbarLog from './components/SnackbarLog';
 import LogViewer from "./components/LogViewer";
+import UserGuide from './components/UserGuide'; 
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 function AppContent() {
     const { addLog } = useLog();
@@ -226,52 +228,57 @@ function AppContent() {
     };
 
     return (
+        <Router>
+            <Routes>
+                <Route path="/" element={
+                    <MiniDrawer
+                        onFileUpload={() => fileInputRef.current.click()}
+                        onClearImages={handleClearImages}
+                        onGetResult={handleGetResult}
+                        onToggleAllDisplayModes={handleToggleAllDisplayModes}
+                        onDownloadAll={handleDownloadAll}
+                        onToggleQualityCheck={async () => {
+                            const newState = await toggleQualityCheck();
+                            setQualityCheckEnabled(newState);
+                        }}
+                        qualityCheckEnabled={qualityCheckEnabled}
+                        hasResults={hasResults}
+                        onSwitchView={() => setCurrentView(currentView === 'upload' ? 'results' : 'upload')}
+                        currentView={currentView}
+                        onViewLogs={handleViewLogs}
+                    >
+                        {duplicateImageWarning && (
+                            <Alert severity="warning" onClose={() => setDuplicateImageWarning(false)}>
+                                Duplicate image(s) detected. Please select a different image.
+                            </Alert>
+                        )}
 
-            <MiniDrawer
-                onFileUpload={() => fileInputRef.current.click()}
-                onClearImages={handleClearImages}
-                onGetResult={handleGetResult}
-                onToggleAllDisplayModes={handleToggleAllDisplayModes}
-                onDownloadAll={handleDownloadAll}
-                onToggleQualityCheck={async () => {
-                    const newState = await toggleQualityCheck();
-                    setQualityCheckEnabled(newState);
-                }}
-                qualityCheckEnabled={qualityCheckEnabled}
-                hasResults={hasResults}
-                onSwitchView={() => setCurrentView(currentView === 'upload' ? 'results' : 'upload')}
-                currentView={currentView}
-                onViewLogs={handleViewLogs}
-            >
-                {duplicateImageWarning && (
-                    <Alert severity="warning" onClose={() => setDuplicateImageWarning(false)}>
-                        Duplicate image(s) detected. Please select a different image.
-                    </Alert>
-                )}
+                        <input
+                            type="file"
+                            multiple
+                            onChange={(e) => handleFileUpload(e.target.files)}
+                            style={{ display: 'none' }}
+                            ref={fileInputRef}
+                            accept="image/*"
+                        />
 
-                <input
-                    type="file"
-                    multiple
-                    onChange={(e) => handleFileUpload(e.target.files)}
-                    style={{ display: 'none' }}
-                    ref={fileInputRef}
-                    accept="image/*"
-                />
-
-                <MainWorkArea
-                    uploadedImageFiles={uploadedImageFiles}
-                    onDeleteImage={handleDeleteImage}
-                    predictionResults={predictionResults}
-                    showResults={showResults}
-                    displayModes={displayModes}
-                    setDisplayModes={setDisplayModes}
-                    isLoading={isLoading}
-                    currentView={currentView}
-                    onFileUpload={() => fileInputRef.current.click()}
-                />
-                <LogViewer open={logViewerOpen} onClose={handleCloseLogViewer} />
-            </MiniDrawer>
-
+                        <MainWorkArea
+                            uploadedImageFiles={uploadedImageFiles}
+                            onDeleteImage={handleDeleteImage}
+                            predictionResults={predictionResults}
+                            showResults={showResults}
+                            displayModes={displayModes}
+                            setDisplayModes={setDisplayModes}
+                            isLoading={isLoading}
+                            currentView={currentView}
+                            onFileUpload={() => fileInputRef.current.click()}
+                        />
+                        <LogViewer open={logViewerOpen} onClose={handleCloseLogViewer} />
+                    </MiniDrawer>
+                } />
+                <Route path="/user-guide" element={<UserGuide />} />
+            </Routes>
+        </Router>
     );
 }
 

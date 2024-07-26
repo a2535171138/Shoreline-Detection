@@ -24,10 +24,10 @@ import ZoomInIcon from '@mui/icons-material/ZoomIn';
 import ZoomOutIcon from '@mui/icons-material/ZoomOut';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import CloseIcon from '@mui/icons-material/Close';
-import {useLog} from "../LogContext";
+// import {useLog} from "../LogContext";
 
 function MainWorkArea({ uploadedImageFiles, predictionResults, showResults, onDeleteImage, displayModes, setDisplayModes,currentView,onFileUpload }) {
-    const { addLog } = useLog();
+    // const { addLog } = useLog();
     const [showModal, setShowModal] = useState(false);
     const [modalImage, setModalImage] = useState('');
     const [showScroll, setShowScroll] = useState(false);
@@ -182,7 +182,7 @@ function MainWorkArea({ uploadedImageFiles, predictionResults, showResults, onDe
                                             <IconButton color="primary" onClick={() => handleImageClick(image.url)}>
                                                 <ZoomInRoundedIcon />
                                             </IconButton>
-                                            <IconButton color="error" onClick={() => onDeleteImage(index)}>
+                                            <IconButton color="error" onClick={() => onDeleteImage(index)} aria-label="delete image">
                                                 <DeleteRoundedIcon />
                                             </IconButton>
                                         </CardActions>
@@ -196,7 +196,7 @@ function MainWorkArea({ uploadedImageFiles, predictionResults, showResults, onDe
                         </div>
                     )
                 ) : (
-                    <div>
+                    <div className="result-container">
                         {uploadedImageFiles.some((_, index) => predictionResults[index] !== null && predictionResults[index] !== 'error') && (
                             <h3 className="text-center mb-4">Shoreline Detection Results</h3>
                         )}
@@ -266,7 +266,7 @@ function MainWorkArea({ uploadedImageFiles, predictionResults, showResults, onDe
                                                     </CardContent>
                                                 </CardActionArea>
                                                 <CardActions>
-                                                    <IconButton color="primary" onClick={() => handleDisplayModeChange(index)}>
+                                                    <IconButton color="primary" onClick={() => handleDisplayModeChange(index)} aria-label="switch to the other image">
                                                         <SwapHorizIcon />
                                                     </IconButton>
                                                     <div style={{ flex: 1 }} />
@@ -278,6 +278,7 @@ function MainWorkArea({ uploadedImageFiles, predictionResults, showResults, onDe
                                                         variant="outlined"
                                                         startIcon={<DownloadRoundedIcon />}
                                                         onClick={(event) => handleDownloadClick(event, index)}
+                                                        aria-label="download options"
                                                     >
                                                         Download
                                                     </Button>
@@ -351,7 +352,7 @@ function MainWorkArea({ uploadedImageFiles, predictionResults, showResults, onDe
                 <MenuItem onClick={() => handleDownload('binary')}>Download Binary Image</MenuItem>
                 <MenuItem onClick={() => handleDownload('color')}>Download Color Image</MenuItem>
                 <MenuItem onClick={() => handleDownload('pixels')}>Download Pixel Data (CSV)</MenuItem>
-                <MenuItem onClick={() => handleDownload('all')}>Download All</MenuItem>
+                <MenuItem onClick={() => handleDownload('all')}>Download All File</MenuItem>
             </Menu>
             <Zoom in={showScroll}>
                 <Fab

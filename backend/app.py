@@ -21,9 +21,9 @@ CORS(app)
 # 配置
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 限制上传大小为16MB
 app.config['UPLOAD_EXTENSIONS'] = ['.jpg', '.png', '.jpeg']
-app.config['CHECKPOINT_PATH'] = "/home/yiting/coaste-detect/backend/19_model.pth"
+app.config['CHECKPOINT_PATH'] = "C:\\Users\\padra\\capstone-project-9900f16aleetcodekillers\\backend\\29_model.pth"
 app.config['THRESHOLD'] = 200  # 可以根据需要调整阈值
-app.config['CLASSIFICATION_MODEL_PATH'] = "/home/yiting/coaste-detect/backend/coast_classifier.pth"  # 确保这个路径是正确的
+app.config['CLASSIFICATION_MODEL_PATH'] = "C:\\Users\\padra\\capstone-project-9900f16aleetcodekillers\\backend\\coast_classifier.pth"  # 确保这个路径是正确的
 app.config['ENABLE_QUALITY_CHECK'] = False
 
 # 配置日志

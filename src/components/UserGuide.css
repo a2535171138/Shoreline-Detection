@@ -1,0 +1,16 @@
+.user-guide-container {
+    margin-top: 20px;
+  }
+  
+  .user-guide-title {
+    margin-bottom: 20px;
+    color: #3f51b5;
+  }
+  
+  .user-guide-card {
+    transition: transform 0.3s;
+  }
+  
+  .user-guide-card:hover {
+    transform: scale(1.05);
+  }
