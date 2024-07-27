@@ -65,29 +65,29 @@ describe('End-to-End Test for Entire Application', () => {
     cy.get('img').should('have.length', 1);
   });
 
-  it('Verifie the backend response and Get result successfully', () => {
+  it('Verifies the backend response and Get result successfully for Narrabeen', () => {
+    const scene = 'Narrabeen';
     cy.get('img').should('have.length', 1);
 
-    // Listen for network requests
-    cy.intercept('POST', '/predict').as('getResult');
+    // Intercept the network request for the specific scene
+    cy.intercept('POST', `/predict/${scene}`).as('getResult');
 
-    // Click the Get Result button
+    // Click the Get Result button for the specific scene
     cy.contains('Get Result').click();
-
-    // // Wait for the network request to complete and get the response
-    // cy.wait('@getResult', { timeout: 60000 }).its('response.statusCode').should('eq', 200);
+    cy.contains('Choose Narrabeen Scene').click();
 
     // Wait for the network request to complete and get the response
     cy.wait('@getResult', { timeout: 60000 }).then((interception) => {
-      expect(interception.response.statusCode).to.eq(200);
+        expect(interception.response.statusCode).to.eq(200);
     });
 
     // Verify that the result container is displayed
     cy.get('.result-container').should('be.visible');
 
     // Check if the result is correctly displayed
-    cy.get('.result-container').should('contain.text', 'Processed Image (binary)'); 
-  });
+    cy.get('.result-container').should('contain.text', 'Processed Image (binary)');
+});
+
 
   it('Switch to color image successfully', () => {
     // Ensure the result is displayed

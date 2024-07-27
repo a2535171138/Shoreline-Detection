@@ -111,6 +111,7 @@ function MiniDrawer({ onFileUpload, onClearImages, onGetResult, onToggleAllDispl
     const fileInputRef = React.useRef(null);
     const [anchorElDownload, setAnchorElDownload] = useState(null);
     const [anchorElAccount, setAnchorElAccount] = useState(null);
+    const [anchorElResult, setAnchorElResult] = useState(null);
     const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
     const navigate = useNavigate();
 
@@ -164,6 +165,14 @@ function MiniDrawer({ onFileUpload, onClearImages, onGetResult, onToggleAllDispl
 
     const handleCancelClearImages = () => {
         setConfirmDialogOpen(false);
+    };
+
+    const handleResultClick = (event) => { 
+        setAnchorElResult(event.currentTarget);
+    };
+
+    const handleResultClose = () => {
+        setAnchorElResult(null);
     };
 
     const OrangeSwitch = styled(Switch)(({ theme }) => ({
@@ -229,7 +238,7 @@ function MiniDrawer({ onFileUpload, onClearImages, onGetResult, onToggleAllDispl
                     </Tooltip>
                     <IconButton
                             size="large"
-                            aria-label="account of current user"
+                            aria-label="user guide"
                             aria-controls="menu-account"
                             aria-haspopup="true"
                             onClick={handleAccountClick}
@@ -290,7 +299,8 @@ function MiniDrawer({ onFileUpload, onClearImages, onGetResult, onToggleAllDispl
                     <ListItem disablePadding sx={{ display: 'block' }}>
                         <Tooltip title="Get Result" disableHoverListener={open}>
                             <ListItemButton
-                                onClick={onGetResult}
+                                onClick={handleResultClick}
+                                // onClick={onGetResult}
                                 sx={{
                                     minHeight: 48,
                                     justifyContent: open ? 'initial' : 'center',
@@ -428,6 +438,15 @@ function MiniDrawer({ onFileUpload, onClearImages, onGetResult, onToggleAllDispl
                 <MenuItem onClick={() => { onDownloadAll('color'); handleDownloadAllClose(); }}>Download All Color Images (ZIP)</MenuItem>
                 <MenuItem onClick={() => { onDownloadAll('pixels'); handleDownloadAllClose(); }}>Download All Pixel Data (CSV)</MenuItem>
                 <MenuItem onClick={() => { onDownloadAll('all'); handleDownloadAllClose(); }}>Download All Types (ZIP)</MenuItem>
+            </Menu>
+            <Menu
+                anchorEl={anchorElResult}
+                open={Boolean(anchorElResult)}
+                onClose={handleResultClose}
+            >
+                <MenuItem onClick={() => { onGetResult('Narrabeen'); handleResultClose(); }}>Choose Narrabeen Scene</MenuItem>
+                <MenuItem onClick={() => { onGetResult('Gold Coast'); handleResultClose(); }}>Choose Gold Coast Scene</MenuItem>
+                <MenuItem onClick={() => { onGetResult('CoastSnap'); handleResultClose(); }}>Choose CoastSnap Scene</MenuItem>
             </Menu>
             <Dialog
                 open={confirmDialogOpen}

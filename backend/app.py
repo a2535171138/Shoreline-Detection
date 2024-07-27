@@ -21,10 +21,16 @@ CORS(app)
 # 配置
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 限制上传大小为16MB
 app.config['UPLOAD_EXTENSIONS'] = ['.jpg', '.png', '.jpeg']
-app.config['CHECKPOINT_PATH'] = "C:\\Users\\padra\\capstone-project-9900f16aleetcodekillers\\backend\\29_model.pth"
 app.config['THRESHOLD'] = 200  # 可以根据需要调整阈值
-app.config['CLASSIFICATION_MODEL_PATH'] = "C:\\Users\\padra\\capstone-project-9900f16aleetcodekillers\\backend\\coast_classifier.pth"  # 确保这个路径是正确的
+app.config['CLASSIFICATION_MODEL_PATH'] = "C:\\Users\\padra\\capstone-project-9900f16aleetcodekillers\\backend\\coast_classifier.pth"
 app.config['ENABLE_QUALITY_CHECK'] = False
+
+# 模型路径配置
+MODEL_PATHS = {
+    'Narrabeen': "C:\\Users\\padra\\capstone-project-9900f16aleetcodekillers\\backend\\29_model.pth",
+    'Gold Coast': "C:\\Users\\padra\\capstone-project-9900f16aleetcodekillers\\backend\\29_model.pth",
+    'CoastSnap': "C:\\Users\\padra\\capstone-project-9900f16aleetcodekillers\\backend\\29_model.pth"
+}
 
 # 配置日志
 logging.basicConfig(level=logging.DEBUG)
@@ -51,9 +57,13 @@ def toggle_quality_check():
     return jsonify({'enabled': app.config['ENABLE_QUALITY_CHECK']})
 
 
-@app.route('/predict', methods=['POST'])
-def predict_route():
+@app.route('/predict/<scene>', methods=['POST'])
+def predict_route(scene):
     app.logger.info(f"Quality check enabled: {app.config['ENABLE_QUALITY_CHECK']}")
+    app.logger.info(f"Selected scene: {scene}")
+
+    if scene not in MODEL_PATHS:
+        return jsonify({'error': 'Invalid scene name'}), 400
 
     if 'file' not in request.files:
         return jsonify({'error': 'No file part'}), 400
@@ -84,9 +94,10 @@ def predict_route():
                 return jsonify({'error': 'Image is not classified as a coastline'}), 400
 
         # 使用预测函数
+        model_path = MODEL_PATHS[scene]
         binary_result, color_result, pixels_result = Dexined_predict(
             image,
-            app.config['CHECKPOINT_PATH'],
+            model_path,
             app.config['THRESHOLD']
         )
 

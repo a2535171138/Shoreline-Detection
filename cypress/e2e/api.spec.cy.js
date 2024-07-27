@@ -1,7 +1,8 @@
 describe('API Tests', () => {
   const baseUrl = 'http://localhost:5000';
+  const scene = 'Narrabeen';
 
-  it('POST /predict should return a prediction', () => {
+  it('POST /predict/:scene should return a prediction', () => {
     cy.fixture('image1.jpg', 'binary')
       .then(Cypress.Blob.binaryStringToBlob)
       .then((fileContent) => {
@@ -11,7 +12,7 @@ describe('API Tests', () => {
 
         cy.request({
           method: 'POST',
-          url: `${baseUrl}/predict`,
+          url: `${baseUrl}/predict/${scene}`,
           body: formData,
           headers: {
             'Content-Type': 'multipart/form-data'
@@ -22,10 +23,10 @@ describe('API Tests', () => {
       });
   });
 
-  it('POST /predict should return error for missing file', () => {
+  it('POST /predict/:scene should return error for missing file', () => {
     cy.request({
       method: 'POST',
-      url: `${baseUrl}/predict`,
+      url: `${baseUrl}/predict/${scene}`,
       failOnStatusCode: false,
     }).then(response => {
       expect(response.status).to.eq(400);
@@ -33,7 +34,7 @@ describe('API Tests', () => {
     });
   });
 
-  it('POST /predict should return error for no selected file', () => {
+  it('POST /predict/:scene should return error for no selected file', () => {
     // 创建一个空的文件上传
     const formData = new FormData();
     const emptyFile = new File([''], '', { type: 'text/plain' });
@@ -41,7 +42,7 @@ describe('API Tests', () => {
 
     cy.request({
       method: 'POST',
-      url: `${baseUrl}/predict`,
+      url: `${baseUrl}/predict/${scene}`,
       body: formData,
       headers: {
         'Content-Type': 'multipart/form-data'
@@ -53,7 +54,7 @@ describe('API Tests', () => {
     });
   });
 
-  it('POST /predict should return error for invalid file type', () => {
+  it('POST /predict/:scene should return error for invalid file type', () => {
     cy.fixture('invalid.txt', 'binary')
       .then(Cypress.Blob.binaryStringToBlob)
       .then((fileContent) => {
@@ -62,7 +63,7 @@ describe('API Tests', () => {
 
         cy.request({
           method: 'POST',
-          url: `${baseUrl}/predict`,
+          url: `${baseUrl}/predict/${scene}`,
           body: formData,
           headers: {
             'Content-Type': 'multipart/form-data'
@@ -114,5 +115,4 @@ describe('API Tests', () => {
       expect(response.headers['content-type']).to.eq('application/zip');
     });
   });
-
 });

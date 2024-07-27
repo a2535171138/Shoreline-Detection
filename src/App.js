@@ -135,14 +135,14 @@ function AppContent() {
         }
     };
 
-    const handleGetResult = async () => {
+    const handleGetResult = async (scene) => {
         setCurrentView('results');
         if (uploadedImageFiles.length === 0) {
             addLog("No images to process", "warning");
             return;
         }
 
-        addLog("Starting image processing...", "info");
+        addLog(`Starting image processing for ${scene}`, "info");
         setShowResults(true);
         const newPredictionResults = [...predictionResults];
 
@@ -151,10 +151,11 @@ function AppContent() {
             if (!processedImages.has(imageFile.id)) {
                 const formData = new FormData();
                 formData.append('file', imageFile.file);
+                formData.append('scene', scene);
 
                 try {
                     addLog(`Processing image: ${imageFile.file.name}`, "info");
-                    const response = await axios.post('http://localhost:5000/predict', formData, {
+                    const response = await axios.post(`http://localhost:5000/predict/${scene}`, formData, { 
                         headers: {
                             'Content-Type': 'multipart/form-data'
                         }
