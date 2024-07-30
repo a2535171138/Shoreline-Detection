@@ -1,6 +1,10 @@
 # AI-Driven Shoreline Mapping for Coastal Monitoring
 This project uses deep learning and image processing methods to automatically map coastlines, including algorithm engineering and an easy-to-use user interface.
 
+# Note!!!
+Before you use the user inferface, please download these model files!!!
+[CoastSnap.pth]([https://www.unsw.edu.au/research/wrl](https://github.com/unsw-cse-comp99-3900-24t1/capstone-project-9900f16aleetcodekillers/releases/download/Models/CoastSnap.pth))
+
 # Algorithm
 
 ## Data Introduction
