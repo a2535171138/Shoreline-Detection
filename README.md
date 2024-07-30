@@ -72,5 +72,18 @@ python Algorithm/Test/uaed_predict.py --input_image_path 'Argus goldcoast/.../im
 python Algorithm/Test/uaed_test.py --input_csv 'test_set.csv' --model_path 'Narrabeen.pth' --save_path 'test_result.txt' --metric_method ODS --binary_threshold 200 --distance_threshold 50
 ```
 
-
+### MUGE
+在使用UAED进行训练和预测前，你需要安装openai-clip和efficientnet-pytorch
+```bash
+pip install openai-clip
+pip install efficientnet_pytorch
+```
+训练
+```bash
+python Algorithm/UAED_MuGE/train_muge.py
+```
+测试
+```bash
+python Algorithm/Test/muge_test.py --input_csv 'test_set.csv' --model_path 'Narrabeen.pth' --save_path 'test_result.txt' --metric_method ODS --binary_threshold 200 --distance_threshold 50
+```
 
