@@ -28,9 +28,9 @@ my_project/
 │   └── ...  
 └── ...  
 
-**Description**: The project dataset is non-public data, from [Water Research Laboratory (UNSW Sydney)](https://www.unsw.edu.au/research/wrl).  
-**Image data**: RGB coast images of varying sizes  
-**csv file**: Holds all the data used for training or testing, the *path* column is the path of each image, the *label* column is the set of coastline pixels that have been labeled, and the other columns have other feature categories of the current image that will not affect the training.  
+- **Description**: The project dataset is non-public data, from [Water Research Laboratory (UNSW Sydney)](https://www.unsw.edu.au/research/wrl).  
+- **Image data**: RGB coast images of varying sizes  
+- **csv file**: Holds all the data used for training or testing, the *path* column is the path of each image, the *label* column is the set of coastline pixels that have been labeled, and the other columns have other feature categories of the current image that will not affect the training.  
 <img src="sample.png" alt="Dataset Samples" width="500"/>  
 Figure 1 - The pixel point set of label drawn on the original coast image
 
