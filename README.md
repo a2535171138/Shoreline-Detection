@@ -4,6 +4,7 @@ This project uses deep learning and image processing methods to automatically ma
 # Note!!!
 Before you use the user inferface, please download these model files!!!
 CoastSnap.pth: https://github.com/unsw-cse-comp99-3900-24t1/capstone-project-9900f16aleetcodekillers/releases/download/Models/CoastSnap.pth
+[CoastSnap.pth]([https://www.unsw.edu.au/research/wrl](https://github.com/unsw-cse-comp99-3900-24t1/capstone-project-9900f16aleetcodekillers/releases/download/Models/CoastSnap.pth)).
 
 # Algorithm
 
