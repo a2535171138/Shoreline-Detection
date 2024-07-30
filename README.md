@@ -54,6 +54,23 @@ UAED & MUGE: https://github.com/ZhouCX117/UAED_MuGE
 Algorithm/  
 └── Algorithm Report.pdf  
 
+### UAED
+在使用UAED进行训练和预测前，你需要安装efficientnet-pytorch
+```bash
+pip install efficientnet-pytorch
+```
+训练
+```bash
+python Algorithm/UAED_MuGE/train_uaed.py --batch_size 8 --csv_path 'train_set.csv' --tmp save_path/trainval_ --warmup 5 --maxepoch 25
+```
+预测，使用--value来specify保存的文件夹名，预测的结果会保存到这个文件夹中，使用--threshold来specify后处理中二值化的阈值
+```bash
+python Algorithm/Test/uaed_predict.py --input_image_path 'Argus goldcoast/.../image0.jpg' --model_path 'Narrabeen.pth' --save_dir result_dir --threshold 200
+```
+测试，使用--binary_threshold来specify后处理中二值化的阈值，使用--distance_threshold来specify ODS方法中被视作两点匹配的距离阈值
+```bash
+python Algorithm/Test/uaed_test.py --input_csv 'test_set.csv' --model_path 'Narrabeen.pth' --save_path 'test_result.txt' --metric_method ODS --binary_threshold 200 --distance_threshold 50
+```
 
 
 
