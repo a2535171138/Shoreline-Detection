@@ -26,3 +26,7 @@ yarn-error.log*
 backend/29_model.pth
 backend/19_model.pth
 backend/coast_classifier.pth
+backend/CoastSnap.pth
+backend/General.pth
+backend/GoldCoast.pth
+backend/Narrabeen.pth

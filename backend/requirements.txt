@@ -2,9 +2,12 @@ Flask
 flask-cors
 pandas
 numpy
-opencv-python
+opencv-python-headless
 Pillow
 matplotlib
 nbformat
 nbconvert
 torch
+torchvision
+efficientnet_pytorch
+argparse

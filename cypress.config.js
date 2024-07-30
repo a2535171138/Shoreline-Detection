@@ -2,6 +2,8 @@ const { defineConfig } = require("cypress");
 
 module.exports = defineConfig({
   e2e: {
+    framework: 'react',
+    bundler: 'webpack',
     specPattern: "cypress/e2e/**/*.cy.{js,jsx,ts,tsx}", // 确保测试文件的匹配模式
     testIsolation: false,
     supportFile: "cypress/support/e2e.js",

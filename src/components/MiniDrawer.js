@@ -444,6 +444,7 @@ function MiniDrawer({ onFileUpload, onClearImages, onGetResult, onToggleAllDispl
                 open={Boolean(anchorElResult)}
                 onClose={handleResultClose}
             >
+                <MenuItem onClick={() => { onGetResult('General'); handleResultClose(); }}>Choose General Scene</MenuItem>
                 <MenuItem onClick={() => { onGetResult('Narrabeen'); handleResultClose(); }}>Choose Narrabeen Scene</MenuItem>
                 <MenuItem onClick={() => { onGetResult('Gold Coast'); handleResultClose(); }}>Choose Gold Coast Scene</MenuItem>
                 <MenuItem onClick={() => { onGetResult('CoastSnap'); handleResultClose(); }}>Choose CoastSnap Scene</MenuItem>

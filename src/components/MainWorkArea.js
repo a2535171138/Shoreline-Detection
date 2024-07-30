@@ -261,7 +261,8 @@ function MainWorkArea({ uploadedImageFiles, predictionResults, showResults, onDe
                                                         </Typography>
                                                         <Typography variant="body2" color="text.secondary">
                                                             Detected Shoreline for: {truncateFileName(image.file.name)} <br />
-                                                            Processed on: {formatDate(predictionResults[index].processingTime)}
+                                                            Processed on: {formatDate(predictionResults[index].processingTime)}<br />
+                                                            Confidence: { predictionResults[index].confidence?.toFixed(4) ?? 'N/A'}
                                                         </Typography>
                                                     </CardContent>
                                                 </CardActionArea>

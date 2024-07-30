@@ -144,7 +144,8 @@ function AppContent() {
 
         addLog(`Starting image processing for ${scene}`, "info");
         setShowResults(true);
-        const newPredictionResults = [...predictionResults];
+        let successCount = 0;
+        let failCount = 0;
 
         for (let i = 0; i < uploadedImageFiles.length; i++) {
             const imageFile = uploadedImageFiles[i];
@@ -155,44 +156,46 @@ function AppContent() {
 
                 try {
                     addLog(`Processing image: ${imageFile.file.name}`, "info");
-                    const response = await axios.post(`http://localhost:5000/predict/${scene}`, formData, { 
+                    const response = await axios.post(`http://localhost:5000/predict/${scene}`, formData, {
                         headers: {
                             'Content-Type': 'multipart/form-data'
                         }
                     });
 
-                    newPredictionResults[i] = {
-                        ...newPredictionResults[i],
-                        binaryResult: `data:image/png;base64,${response.data.binary_result}`,
-                        colorResult: `data:image/png;base64,${response.data.color_result}`,
-                        pixelsResult: response.data.pixels_result,
-                        processingTime: response.data.processingTime,
-                    };
+                    setPredictionResults(prevResults => {
+                        const newResults = [...prevResults];
+                        newResults[i] = {
+                            binaryResult: `data:image/png;base64,${response.data.binary_result}`,
+                            colorResult: `data:image/png;base64,${response.data.color_result}`,
+                            pixelsResult: response.data.pixels_result,
+                            processingTime: response.data.processingTime,
+                            confidence: parseFloat(response.data.confidence)
+                        };
+                        return newResults;
+                    });
 
                     setProcessedImages(prev => new Set(prev).add(imageFile.id));
                     addLog(`Successfully processed image: ${imageFile.file.name}`, "success");
+                    successCount++;
                 } catch (error) {
                     console.error('Error fetching prediction result:', error);
-                    newPredictionResults[i] = {
-                        error: error.response?.data?.error || 'Unknown error occurred'
-                    };
+                    setPredictionResults(prevResults => {
+                        const newResults = [...prevResults];
+                        newResults[i] = {
+                            error: error.response?.data?.error || 'Unknown error occurred'
+                        };
+                        return newResults;
+                    });
                     addLog(`Failed to process image: ${imageFile.file.name}. ${error.response?.data?.error || 'Unknown error occurred'}`, "error");
+                    failCount++;
                 }
             } else {
                 addLog(`Image already processed: ${imageFile.file.name}`, "info");
             }
         }
 
-        setPredictionResults([...newPredictionResults]);
-
-        const successfullyProcessed = newPredictionResults.filter(result => !result.error).length;
-        const failedToProcess = newPredictionResults.filter(result => result.error).length;
-
-        addLog(`Processing complete. Successfully processed: ${successfullyProcessed}, Failed: ${failedToProcess}`, "info");
-
-        if (successfullyProcessed > 0) {
-            setHasResults(true);
-        }
+        setHasResults(true);
+        addLog(`Processing complete. Successfully processed: ${successCount}, Failed: ${failCount}`, "info");
     };
 
     const handleDownloadAll = async (type) => {

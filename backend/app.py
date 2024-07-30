@@ -8,6 +8,7 @@ import logging
 from werkzeug.utils import secure_filename
 import os
 from predict import Dexined_predict
+from uaed_predict import UAED_predict
 from quality import evaluate_image_quality
 from classify import classify_image
 from PIL import Image
@@ -22,14 +23,15 @@ CORS(app)
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 限制上传大小为16MB
 app.config['UPLOAD_EXTENSIONS'] = ['.jpg', '.png', '.jpeg']
 app.config['THRESHOLD'] = 200  # 可以根据需要调整阈值
-app.config['CLASSIFICATION_MODEL_PATH'] = "C:\\Users\\padra\\capstone-project-9900f16aleetcodekillers\\backend\\coast_classifier.pth"
+app.config['CLASSIFICATION_MODEL_PATH'] = "/home/yiting/coaste-detect/backend/coast_classifier.pth"
 app.config['ENABLE_QUALITY_CHECK'] = False
 
 # 模型路径配置
 MODEL_PATHS = {
-    'Narrabeen': "C:\\Users\\padra\\capstone-project-9900f16aleetcodekillers\\backend\\29_model.pth",
-    'Gold Coast': "C:\\Users\\padra\\capstone-project-9900f16aleetcodekillers\\backend\\29_model.pth",
-    'CoastSnap': "C:\\Users\\padra\\capstone-project-9900f16aleetcodekillers\\backend\\29_model.pth"
+    'General': "/home/yiting/coaste-detect/backend/General.pth",
+    'Narrabeen': "/home/yiting/coaste-detect/backend/Narrabeen.pth",
+    'Gold Coast': "/home/yiting/coaste-detect/backend/GoldCoast.pth",
+    'CoastSnap': "/home/yiting/coaste-detect/backend/CoastSnap.pth"
 }
 
 # 配置日志
@@ -95,7 +97,7 @@ def predict_route(scene):
 
         # 使用预测函数
         model_path = MODEL_PATHS[scene]
-        binary_result, color_result, pixels_result = Dexined_predict(
+        binary_result, color_result, pixels_result, confidence= UAED_predict(
             image,
             model_path,
             app.config['THRESHOLD']
@@ -117,18 +119,16 @@ def predict_route(scene):
             'binary_result': binary_encoded,
             'color_result': color_encoded,
             'pixels_result': pixels_result,
-            'processingTime': processing_time
+            'processingTime': processing_time,
+            'confidence': confidence
         }
-
-        # 将结果添加到全局变量
-        processed_results.append(result)
+        app.logger.info(f"Returning result with confidence: {confidence}")
 
         return json.dumps(result, cls=NumpyEncoder), 200, {'Content-Type': 'application/json'}
 
     except Exception as e:
         app.logger.error(f"Prediction failed: {str(e)}", exc_info=True)
         return jsonify({'error': f'Prediction failed: {str(e)}'}), 500
-
 
 @app.route('/download_all', methods=['GET'])
 def download_all():
