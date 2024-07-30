@@ -1,7 +1,7 @@
 import pandas as pd
 import argparse
 
-# Function to split dataset into training and test sets
+# Split dataset into training and test sets
 def split_dataset(input_csv, train_csv, test_csv, num_train, num_test):
     df = pd.read_csv(input_csv)
     shuffled_df = df.sample(frac=1)
