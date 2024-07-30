@@ -21,7 +21,7 @@ csv：保存用于训练或测试的所有数据，path列是每张图像的路�
 图像数据：大小不等的RGB海岸图像
 说明：该项目数据集非公开数据，来自Water Research Laboratory (UNSW Syney) https://www.unsw.edu.au/research/wrl
 ![Dataset Samples](sample.png)
-
+<img src="sample.png" alt="Dataset Samples" width="300"/>
 
 
 
