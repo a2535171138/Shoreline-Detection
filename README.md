@@ -78,7 +78,7 @@ python Algorithm/Test/uaed_predict.py --input_image_path 'Argus goldcoast/.../im
 ```
 <img src="uaed_result.png" alt="uaed_result" width="500"/>  
 Figure 2 - The predicted pixel point set drawn on the original coast image    
-<br>
+<br><br>
 Test: Use --binary_threshold to specify the threshold for post-processing to use for binarization, and --distance_threshold to specify the threshold for the ODS method to consider a two-point match  
 ```bash
 python Algorithm/Test/uaed_test.py --input_csv 'test_set.csv' --model_path 'Narrabeen.pth' --save_path 'test_result.txt' --metric_method ODS --binary_threshold 200 --distance_threshold 50
