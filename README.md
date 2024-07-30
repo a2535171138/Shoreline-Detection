@@ -27,4 +27,23 @@ csv：保存用于训练或测试的所有数据，path列是每张图像的路�
 ```bash
 python Algorithm/DataProcessing/process_dataframes.py --csv_files coastsnap_segment_clean.csv argus_goldcoast_segment.csv segment_narraV2.csv plan.csv --folders 'CoastSnap' 'Argus goldcoast' 'Argus narrabeen' --output_csv data_set.csv
 ```
-打算
+数据类别平衡，使用--column来specify需要平衡的特征，该特征下所有类型的数据数量都将相同
+```bash
+python Algorithm/DataProcessing/balance_dataset.py --input_csv data_set.csv --output_csv balanced_data_set.csv --column site
+```
+难例加权，使用--column来specify需要加权的特征，使用--value来specify需要加权的特征中的具体类别，使用--multiplier来specify加权的倍率，
+```bash
+python Algorithm/DataProcessing/weight_hard_examples.py --input_csv data_set.csv --output_csv weighted_data_set.csv --column shadow --value 1 --multiplier 4
+```
+训练集和测试集划分
+```bash
+python Algorithm/DataProcessing/split_dataset.py --input_csv data_set.csv --train_csv train_set.csv --test_csv test_set.csv --num_train 1000 --num_test 200
+```
+
+
+
+
+
+
+
+
