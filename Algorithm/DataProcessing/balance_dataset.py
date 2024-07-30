@@ -1,7 +1,7 @@
 import pandas as pd
 import argparse
 
-# Function to balance dataset by upsampling
+# Balance dataset by upsampling
 def balance_dataset(input_csv, output_csv, column):
     df = pd.read_csv(input_csv)
     column_counts = df[column].value_counts().to_dict()
