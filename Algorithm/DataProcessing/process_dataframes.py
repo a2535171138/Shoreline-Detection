@@ -2,7 +2,7 @@ import pandas as pd
 import os
 import argparse
 
-# Function to generate a dictionary for a row and add it to the output list
+# Generate a dictionary for a row and add it to the output list
 def get_dict(row, path, site, rectified, new_label, num_no_label):
     if rectified == 0:
         label = row['oblique_geometry']
@@ -26,7 +26,7 @@ def get_dict(row, path, site, rectified, new_label, num_no_label):
         'label': label
     })
 
-# Function to process DataFrames and generate output labels
+# Process DataFrames and generate output labels
 def process_dataframes(csv_files, folders, output_csv):
     # Reading CSV files into DataFrames
     df1 = pd.read_csv(csv_files[0], index_col=0)
