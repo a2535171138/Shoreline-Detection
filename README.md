@@ -19,11 +19,11 @@ my_project/
 └── ...  
 csv：保存用于训练或测试的所有数据，path列是每张图像的路径，label列是已标注的海岸线像素点集，其他列为当前图像的其他特征类别，不会影响训练。  
 图像数据：大小不等的RGB海岸图像  
-说明：该项目数据集非公开数据，来自Water Research Laboratory (UNSW Syney) https://www.unsw.edu.au/research/wrl  
+说明：该项目数据集非公开数据，来自[Water Research Laboratory (UNSW Sydney)](https://www.unsw.edu.au/research/wrl)
 <img src="sample.png" alt="Dataset Samples" width="500"/>
 
+### 数据预处理
+将不同场景的csv数据合并后并输出成可训练的csv文件
+`python Algorithm/DataProcessing/process_dataframes.py --csv_files coastsnap_segment_clean.csv argus_goldcoast_segment.csv segment_narraV2.csv plan.csv --folders 'CoastSnap' 'Argus goldcoast' 'Argus narrabeen' --output_csv data_set.csv`
 
 
-
-
-[![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-718a45dd9cf7e7f842a935f5ebbe5719a5e09af4491e668f4dbf3b35d5cca122.svg)](https://classroom.github.com/online_ide?assignment_repo_id=15178765&assignment_repo_type=AssignmentRepo)
