@@ -12,8 +12,9 @@ my_project/
 │   └── ...  
 ├── Argus narrabeen/  
 │   └── ...  
-├── data_set.csv  
-│  
+├── train_set.csv  
+├── test_set.csv 
+│ 
 ├── Algorithm  
 │   └── ...  
 └── ...  
@@ -39,7 +40,10 @@ python Algorithm/DataProcessing/weight_hard_examples.py --input_csv data_set.csv
 ```bash
 python Algorithm/DataProcessing/split_dataset.py --input_csv data_set.csv --train_csv train_set.csv --test_csv test_set.csv --num_train 1000 --num_test 200
 ```
-
+打印csv文件中所有特征的所有类别的数量
+```bash
+python Algorithm/DataProcessing/print_category_counts.py --file_path data_set.csv
+```
 
 
 
