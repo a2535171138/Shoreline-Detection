@@ -20,12 +20,12 @@ my_project/
 └── ...  
 **csv file**: Holds all the data used for training or testing, the *path* column is the path of each image, the *label* column is the set of coastline pixels that have been labeled, and the other columns have other feature categories of the current image that will not affect the training.  
 **Image data**: RGB coast images of varying sizes  
-**Description**: The project dataset is non-public data, from [Water Research Laboratory (UNSW Sydney)](https://www.unsw.edu.au/research/wrl)  
+**Description**: The project dataset is non-public data, from [Water Research Laboratory (UNSW Sydney)](https://www.unsw.edu.au/research/wrl).  
 <img src="sample.png" alt="Dataset Samples" width="500"/>  
 Figure 1 - The pixel point set of label drawn on the original coast image
 
 ## Data preprocessing
-Combine csv data from different scenarios and outputs them into a trainable csv file.
+Combine csv data from different scenarios and outputs them into a trainable csv file
 ```bash
 python Algorithm/DataProcessing/process_dataframes.py --csv_files coastsnap_segment_clean.csv argus_goldcoast_segment.csv segment_narraV2.csv plan.csv --folders 'CoastSnap' 'Argus goldcoast' 'Argus narrabeen' --output_csv data_set.csv
 ```
@@ -33,15 +33,15 @@ Class balance: Use --column to specify the balanced feature, where all classes w
 ```bash
 python Algorithm/DataProcessing/balance_dataset.py --input_csv data_set.csv --output_csv balanced_data_set.csv --column site
 ```
-Weighting chanllenging data: use --column to specify the feature to be weighted, --value to specify the class of the feature to be weighted, and --multiplier to specify the rate of the weighting.
+Weighting chanllenging data: Use --column to specify the feature to be weighted, --value to specify the class of the feature to be weighted, and --multiplier to specify the rate of the weighting
 ```bash
 python Algorithm/DataProcessing/weight_hard_examples.py --input_csv data_set.csv --output_csv weighted_data_set.csv --column shadow --value 1 --multiplier 4
 ```
-Split training and test set.
+Split training and test set
 ```bash
 python Algorithm/DataProcessing/split_dataset.py --input_csv data_set.csv --train_csv train_set.csv --test_csv test_set.csv --num_train 1000 --num_test 200
 ```
-Print the number of all categories for all features in the csv file.
+Print the number of all categories for all features in the csv file
 ```bash
 python Algorithm/DataProcessing/print_category_counts.py --file_path data_set.csv
 ```
@@ -52,7 +52,7 @@ DEXINED: https://github.com/xavysp/DexiNed
 UAED & MUGE: https://github.com/ZhouCX117/UAED_MuGE  
 
 ## UAED
-Before using UAED for training and prediction, you need to install efficientnet-pytorch.
+Before using UAED for training and prediction, you need to install efficientnet-pytorch
 ```bash
 pip install efficientnet-pytorch
 ```
@@ -60,7 +60,7 @@ Train
 ```bash
 python Algorithm/UAED_MuGE/train_uaed.py --batch_size 8 --csv_path 'train_set.csv' --tmp save_path/trainval_ --warmup 5 --maxepoch 25
 ```
-Predict: use --value to specify the folder name to save the predictions to, and --threshold to specify the threshold for post-processing to use for binarization.
+Predict: Use --value to specify the folder name to save the predictions to, and --threshold to specify the threshold for post-processing to use for binarization
 ```bash
 python Algorithm/Test/uaed_predict.py --input_image_path 'Argus goldcoast/.../image0.jpg' --model_path 'Narrabeen.pth' --save_dir result_dir --threshold 200
 ```
