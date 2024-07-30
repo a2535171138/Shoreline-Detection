@@ -35,7 +35,7 @@ my_project/
 Figure 1 - The pixel point set of label drawn on the original coast image
 
 ## Data preprocessing
-In order to obtain the rectified data set with coordinate transformation `plan.csv`, please refer to the `Coordinate_Correction.ipynb` file.  
+In order to obtain the rectified data set with coordinate transformation `plan.csv`, please refer to the `Algorithm/jupyter notebooks/Coordinate_Correction.ipynb` file.  
 
 Combine csv data from different scenarios and outputs them into a trainable csv file.  
 ```bash
@@ -115,9 +115,7 @@ python Algorithm/Test/Dexined_test.py --input_csv 'test_set.csv' --model_path 'N
 
 ## Classification
 We have provided a pre-trained model for classifying coastlines, you can download it in [coast_classifier.pth](https://github.com/unsw-cse-comp99-3900-24t1/capstone-project-9900f16aleetcodekillers/releases/download/Models/coast_classifier.pth).  
-If you want to know more details or need to train your own model, please refer to the `classify.ipynb` file for reference.
+If you want to know more details or need to train your own model, please refer to the `Algorithm/jupyter notebooks/classify.ipynb` file for reference.
 
 ## Document
-We optimized the UAED model for this project. For more details, please read `Algorithm Report.pdf`  
-Algorithm/  
-└── Algorithm Report.pdf  
+We optimized the UAED model for this project. For more details, please read `Algorithm/Algorithm Report.pdf`  
