@@ -118,6 +118,6 @@ We have provided a pre-trained model for classifying coastlines, you can downloa
 If you want to know more details or need to train your own model, please refer to the `classify.ipynb` file for reference.
 
 ## Document
-We optimized the UAED model for this project. For more details, please read *Algorithm Report.pdf*  
+We optimized the UAED model for this project. For more details, please read `Algorithm Report.pdf`  
 Algorithm/  
 └── Algorithm Report.pdf  
