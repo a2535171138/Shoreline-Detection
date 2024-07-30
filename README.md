@@ -46,7 +46,7 @@ python Algorithm/DataProcessing/print_category_counts.py --file_path data_set.cs
 ```
 
 ### 模型
-该项目使用了3种卷积神经网络模型来实现海岸线数据的训练和测试，UAED, DEXINED, MUGE，并针对该项目对UAED模型做了进一步优化，想要了解更多细节，请阅读Algorithm Report.pdf
+该项目使用了3种卷积神经网络模型来实现海岸线数据的训练和测试，UAED, DEXINED, MUGE，并针对该项目对UAED模型做了进一步优化，想要了解更多细节，请阅读[Algorithm Report.pdf]([https://www.unsw.edu.au/research/wrl](https://github.com/unsw-cse-comp99-3900-24t1/capstone-project-9900f16aleetcodekillers/blob/Algorithm/Algorithm/Algorithm%20Report.pdf))
 
 
 
