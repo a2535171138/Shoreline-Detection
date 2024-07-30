@@ -70,6 +70,7 @@ python Algorithm/Test/uaed_predict.py --input_image_path 'Argus goldcoast/.../im
 ```
 <img src="uaed_result.png" alt="uaed_result" width="500"/>  
 Figure 2 - 将预测的像素点集画在原海岸图像  
+
 测试，使用--binary_threshold来specify后处理中二值化的阈值，使用--distance_threshold来specify ODS方法中被视作两点匹配的距离阈值  
 ```bash
 python Algorithm/Test/uaed_test.py --input_csv 'test_set.csv' --model_path 'Narrabeen.pth' --save_path 'test_result.txt' --metric_method ODS --binary_threshold 200 --distance_threshold 50
