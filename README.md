@@ -47,7 +47,7 @@ python Algorithm/DataProcessing/print_category_counts.py --file_path data_set.cs
 ```
 
 ## Model  
-This project uses 3 kinds of convolutional neural network models to realize the training and testing of coastline data. The model code from the following open source projects is used, and we would like to thank:
+This project uses 3 kinds of convolutional neural network models to realize the training and testing of coastline data. The model code from the following open source projects is used, and we would like to thank:  
 DEXINED: https://github.com/xavysp/DexiNed  
 UAED & MUGE: https://github.com/ZhouCX117/UAED_MuGE  
 
@@ -65,7 +65,8 @@ Predict: Use --value to specify the folder name to save the predictions to, and 
 python Algorithm/Test/uaed_predict.py --input_image_path 'Argus goldcoast/.../image0.jpg' --model_path 'Narrabeen.pth' --save_dir result_dir --threshold 200
 ```
 <img src="uaed_result.png" alt="uaed_result" width="500"/>  
-Figure 2 - The predicted pixel point set drawn on the original coast image  
+Figure 2 - The predicted pixel point set drawn on the original coast image    
+
 Test: use --binary_threshold to specify the threshold for post-processing to use for binarization, and --distance_threshold to specify the threshold for the ODS method to consider a two-point match  
 ```bash
 python Algorithm/Test/uaed_test.py --input_csv 'test_set.csv' --model_path 'Narrabeen.pth' --save_path 'test_result.txt' --metric_method ODS --binary_threshold 200 --distance_threshold 50
