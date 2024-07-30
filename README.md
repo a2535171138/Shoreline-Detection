@@ -24,6 +24,7 @@ csv：保存用于训练或测试的所有数据，path列是每张图像的路�
 
 ### 数据预处理
 将不同场景的csv数据合并后并输出成可训练的csv文件
-`python Algorithm/DataProcessing/process_dataframes.py --csv_files coastsnap_segment_clean.csv argus_goldcoast_segment.csv segment_narraV2.csv plan.csv --folders 'CoastSnap' 'Argus goldcoast' 'Argus narrabeen' --output_csv data_set.csv`
+```bash
+python Algorithm/DataProcessing/process_dataframes.py --csv_files coastsnap_segment_clean.csv argus_goldcoast_segment.csv segment_narraV2.csv plan.csv --folders 'CoastSnap' 'Argus goldcoast' 'Argus narrabeen' --output_csv data_set.csv
 
 
