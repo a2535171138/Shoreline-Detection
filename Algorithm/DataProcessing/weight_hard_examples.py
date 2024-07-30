@@ -1,7 +1,7 @@
 import pandas as pd
 import argparse
 
-# Function to apply weighting to hard examples (e.g., shadowed images)
+# Apply weighting to hard examples (e.g., shadowed images)
 def weight_hard_examples(input_csv, output_csv, column='shadow', value=1, multiplier=4):
     df = pd.read_csv(input_csv)
     filtered_df = df[df[column] == value]
