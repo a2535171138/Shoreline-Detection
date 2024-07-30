@@ -13,9 +13,9 @@ my_project/
 ├── Argus narrabeen/  
 │   └── ...  
 ├── train_set.csv  
-├── test_set.csv 
-│ 
-├── Algorithm  
+├── test_set.csv  
+│  
+├── Algorithm/  
 │   └── ...  
 └── ...  
 csv：保存用于训练或测试的所有数据，path列是每张图像的路径，label列是已标注的海岸线像素点集，其他列为当前图像的其他特征类别，不会影响训练。  
@@ -46,7 +46,9 @@ python Algorithm/DataProcessing/print_category_counts.py --file_path data_set.cs
 ```
 
 ### 模型
-该项目使用了3种卷积神经网络模型来实现海岸线数据的训练和测试，UAED, DEXINED, MUGE，并针对该项目对UAED模型做了进一步优化，想要了解更多细节，请阅读[Algorithm Report.pdf]([https://www.unsw.edu.au/research/wrl](https://github.com/unsw-cse-comp99-3900-24t1/capstone-project-9900f16aleetcodekillers/blob/Algorithm/Algorithm/Algorithm%20Report.pdf))
+该项目使用了3种卷积神经网络模型来实现海岸线数据的训练和测试，UAED, DEXINED, MUGE，并针对该项目对UAED模型做了进一步优化，想要了解更多细节，请阅读Algorithm Report.pdf
+Algorithm/  
+└── Algorithm Report.pdf  
 
 
 
