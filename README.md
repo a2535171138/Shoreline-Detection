@@ -1,9 +1,9 @@
 # AI-Driven Shoreline Mapping for Coastal Monitoring
 这个项目使用深度学习和图像处理方法自动绘制海岸线，包括完整的算法工程和易于使用的用户界面
 
-## Algorithm
+# Algorithm
 
-### 数据介绍
+## 数据介绍
 my_project/  
 │  
 ├── Argus goldcoast/  
@@ -46,16 +46,12 @@ python Algorithm/DataProcessing/split_dataset.py --input_csv data_set.csv --trai
 python Algorithm/DataProcessing/print_category_counts.py --file_path data_set.csv
 ```
 
-### 模型
+## 模型
 该项目使用了3种卷积神经网络模型来实现海岸线数据的训练和测试，使用了以下开源项目中的模型代码，在此表示感谢：  
 DEXINED: https://github.com/xavysp/DexiNed  
 UAED & MUGE: https://github.com/ZhouCX117/UAED_MuGE  
 
-此外，我们针对该项目对UAED模型做了进一步优化，想要了解更多细节，请阅读Algorithm Report.pdf  
-Algorithm/  
-└── Algorithm Report.pdf  
-
-### UAED
+## UAED
 在使用UAED进行训练和预测前，你需要安装efficientnet-pytorch
 ```bash
 pip install efficientnet-pytorch
@@ -77,7 +73,7 @@ Figure 2 - 将预测的像素点集画在原海岸图像
 python Algorithm/Test/uaed_test.py --input_csv 'test_set.csv' --model_path 'Narrabeen.pth' --save_path 'test_result.txt' --metric_method ODS --binary_threshold 200 --distance_threshold 50
 ```
 
-### MUGE
+## MUGE
 在使用UAED进行训练和测试前，你需要安装openai-clip和efficientnet-pytorch
 ```bash
 pip install openai-clip
@@ -92,7 +88,7 @@ python Algorithm/UAED_MuGE/train_muge.py
 python Algorithm/Test/muge_test.py --input_csv 'test_set.csv' --model_path 'Narrabeen.pth' --save_path 'test_result.txt' --metric_method ODS --binary_threshold 200 --distance_threshold 50
 ```
 
-### DEXINED
+## DEXINED
 在使用DEXINED进行训练和测试前，你需要安装kornia
 ```bash
 pip install kornia
@@ -105,3 +101,8 @@ python DexiNed/main.py
 ```bash
 python Algorithm/Test/Dexined_test.py --input_csv 'test_set.csv' --model_path 'Narrabeen.pth' --save_path 'test_result.txt' --metric_method ODS --binary_threshold 200 --distance_threshold 50
 ```
+
+## 文档
+我们针对该项目对UAED模型做了进一步优化，想要了解更多细节，请阅读Algorithm Report.pdf  
+Algorithm/  
+└── Algorithm Report.pdf  
