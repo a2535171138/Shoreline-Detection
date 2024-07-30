@@ -65,14 +65,14 @@ Predict: Use --value to specify the folder name to save the predictions to, and 
 python Algorithm/Test/uaed_predict.py --input_image_path 'Argus goldcoast/.../image0.jpg' --model_path 'Narrabeen.pth' --save_dir result_dir --threshold 200
 ```
 <img src="uaed_result.png" alt="uaed_result" width="500"/>  
-Figure 2 - The predicted pixel point set drawn on the original coast image    
-Test: use --binary_threshold to specify the threshold for post-processing to use for binarization, and --distance_threshold to specify the threshold for the ODS method to consider a two-point match.  
+Figure 2 - The predicted pixel point set drawn on the original coast image  
+Test: use --binary_threshold to specify the threshold for post-processing to use for binarization, and --distance_threshold to specify the threshold for the ODS method to consider a two-point match  
 ```bash
 python Algorithm/Test/uaed_test.py --input_csv 'test_set.csv' --model_path 'Narrabeen.pth' --save_path 'test_result.txt' --metric_method ODS --binary_threshold 200 --distance_threshold 50
 ```
 
 ## MUGE
-Before using UAED for training and testing, you need to install openai-clip and efficientnet-pytorch.
+Before using UAED for training and testing, you need to install openai-clip and efficientnet-pytorch
 ```bash
 pip install openai-clip
 pip install efficientnet_pytorch
@@ -87,7 +87,7 @@ python Algorithm/Test/muge_test.py --input_csv 'test_set.csv' --model_path 'Narr
 ```
 
 ## DEXINED
-Before using DEXINED for training and testing, you need to install kornia.
+Before using DEXINED for training and testing, you need to install kornia
 ```bash
 pip install kornia
 ```
