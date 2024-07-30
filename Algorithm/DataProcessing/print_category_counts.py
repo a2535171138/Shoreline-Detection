@@ -1,7 +1,7 @@
 import pandas as pd
 import argparse
 
-# Function to print category counts for each feature in a dataset
+# Print category counts for each feature in a dataset
 def print_category_counts(file_path):
     df = pd.read_csv(file_path)
     
