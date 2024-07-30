@@ -22,6 +22,7 @@ csv：保存用于训练或测试的所有数据，path列是每张图像的路�
 图像数据：大小不等的RGB海岸图像  
 说明：该项目数据集非公开数据，来自[Water Research Laboratory (UNSW Sydney)](https://www.unsw.edu.au/research/wrl)
 <img src="sample.png" alt="Dataset Samples" width="500"/>
+Figure 1 - 将label的像素点集画在原海岸图像
 
 ### 数据预处理
 将不同场景的csv数据合并后并输出成可训练的csv文件
@@ -67,6 +68,8 @@ python Algorithm/UAED_MuGE/train_uaed.py --batch_size 8 --csv_path 'train_set.cs
 ```bash
 python Algorithm/Test/uaed_predict.py --input_image_path 'Argus goldcoast/.../image0.jpg' --model_path 'Narrabeen.pth' --save_dir result_dir --threshold 200
 ```
+
+Figure 2 - 将预测的像素点集画在原海岸图像
 测试，使用--binary_threshold来specify后处理中二值化的阈值，使用--distance_threshold来specify ODS方法中被视作两点匹配的距离阈值
 ```bash
 python Algorithm/Test/uaed_test.py --input_csv 'test_set.csv' --model_path 'Narrabeen.pth' --save_path 'test_result.txt' --metric_method ODS --binary_threshold 200 --distance_threshold 50
