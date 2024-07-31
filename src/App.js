@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, {useEffect, useRef, useState,useCallback} from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import MiniDrawer from './components/MiniDrawer';
@@ -8,7 +8,7 @@ import Alert from '@mui/material/Alert';
 import { LogProvider, useLog } from './LogContext';
 import SnackbarLog from './components/SnackbarLog';
 import LogViewer from "./components/LogViewer";
-import UserGuide from './components/UserGuide'; 
+import UserGuide from './components/UserGuide';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 function AppContent() {
@@ -24,6 +24,78 @@ function AppContent() {
     const [hasResults, setHasResults] = useState(false);
     const [currentView, setCurrentView] = useState('upload');
     const [logViewerOpen, setLogViewerOpen] = useState(false);
+    const [modelStatus, setModelStatus] = useState({});
+    const [isInitialized, setIsInitialized] = useState(false);
+    const [isDownloading, setIsDownloading] = useState(false);
+
+    useEffect(() => {
+        const initialize = async () => {
+            if (!isInitialized) {
+                try {
+                    const response = await axios.get('http://localhost:5000/initialize');
+                    setModelStatus(response.data);
+                    setIsInitialized(true);
+
+                    // 检查是否有正在下载的模型
+                    const downloading = Object.values(response.data).includes("Downloading");
+                    setIsDownloading(downloading);
+
+                    // 处理模型状态并添加日志
+                    Object.entries(response.data).forEach(([model, status]) => {
+                        if (status === "Downloaded") {
+                            addLog(`Model ${model} has been successfully downloaded.`, 'success');
+                        } else if (status === "Download failed") {
+                            addLog(`Failed to download model ${model}.`, 'error');
+                        } else if (status === "Already exists") {
+                            addLog(`Model ${model} is already available.`, 'info');
+                        } else if (status === "Downloading") {
+                            addLog(`Downloading model ${model}...`, 'info');
+                        }
+                    });
+
+                    // 如果有模型正在下载，开始轮询
+                    if (downloading) {
+                        pollModelStatus();
+                    }
+                } catch (error) {
+                    console.error('Failed to initialize:', error);
+                    addLog('Failed to initialize application', 'error');
+                }
+            }
+        };
+
+        initialize();
+    }, [addLog, isInitialized]);
+
+    const pollModelStatus = useCallback(() => {
+        const poll = setInterval(async () => {
+            try {
+                const response = await axios.get('http://localhost:5000/model_status');
+                setModelStatus(response.data);
+
+                const downloading = Object.values(response.data).includes("Downloading");
+                setIsDownloading(downloading);
+
+                if (!downloading) {
+                    clearInterval(poll);
+                    addLog('All models have finished downloading.', 'success');
+                }
+
+                Object.entries(response.data).forEach(([model, status]) => {
+                    if (status === "Downloaded" && modelStatus[model] !== "Downloaded") {
+                        addLog(`Model ${model} has been successfully downloaded.`, 'success');
+                    } else if (status === "Download failed" && modelStatus[model] !== "Download failed") {
+                        addLog(`Failed to download model ${model}.`, 'error');
+                    }
+                });
+            } catch (error) {
+                console.error('Failed to get model status:', error);
+                clearInterval(poll);
+            }
+        }, 5000); // 每5秒轮询一次
+
+        return () => clearInterval(poll);
+    }, [addLog, modelStatus]);
 
     const handleViewLogs = () => {
         setLogViewerOpen(true);
@@ -276,6 +348,9 @@ function AppContent() {
                             isLoading={isLoading}
                             currentView={currentView}
                             onFileUpload={() => fileInputRef.current.click()}
+                            isDownloading={isDownloading}
+                            modelStatus={modelStatus}
+
                         />
                         <LogViewer open={logViewerOpen} onClose={handleCloseLogViewer} />
                     </MiniDrawer>

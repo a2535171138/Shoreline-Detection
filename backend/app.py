@@ -7,7 +7,6 @@ from datetime import datetime
 import logging
 from werkzeug.utils import secure_filename
 import os
-from predict import Dexined_predict
 from uaed_predict import UAED_predict
 from quality import evaluate_image_quality
 from classify import classify_image
@@ -15,6 +14,7 @@ from PIL import Image
 import json
 import io
 import zipfile
+from model_manager import check_and_download_models
 
 app = Flask(__name__)
 CORS(app)
@@ -34,6 +34,7 @@ MODEL_PATHS = {
     'CoastSnap': "/home/yiting/coaste-detect/backend/CoastSnap.pth"
 }
 
+
 # 配置日志
 logging.basicConfig(level=logging.DEBUG)
 
@@ -51,6 +52,8 @@ class NumpyEncoder(json.JSONEncoder):
 
 # 全局变量来存储处理结果
 processed_results = []
+
+
 
 
 @app.route('/toggle_quality_check', methods=['POST'])
@@ -97,7 +100,7 @@ def predict_route(scene):
 
         # 使用预测函数
         model_path = MODEL_PATHS[scene]
-        binary_result, color_result, pixels_result, confidence= UAED_predict(
+        binary_result, color_result, pixels_result, confidence = UAED_predict(
             image,
             model_path,
             app.config['THRESHOLD']
@@ -129,6 +132,7 @@ def predict_route(scene):
     except Exception as e:
         app.logger.error(f"Prediction failed: {str(e)}", exc_info=True)
         return jsonify({'error': f'Prediction failed: {str(e)}'}), 500
+
 
 @app.route('/download_all', methods=['GET'])
 def download_all():
@@ -204,6 +208,25 @@ def clear_results():
     global processed_results
     processed_results = []
     return jsonify({'message': 'All results cleared'}), 200
+
+
+model_status = None
+
+@app.route('/initialize', methods=['GET'])
+def initialize():
+    global model_status
+    if model_status is None:
+        app.logger.info("Initializing model status")
+        model_status = check_and_download_models()
+    return jsonify(model_status)
+
+@app.route('/model_status', methods=['GET'])
+def get_model_status():
+    global model_status
+    if model_status is None:
+        return jsonify({"error": "Model status not initialized"}), 400
+    return jsonify(model_status)
+# 删除之前的 /model_status 路由
 
 
 if __name__ == '__main__':

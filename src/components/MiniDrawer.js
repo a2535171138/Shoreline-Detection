@@ -37,6 +37,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
+import LinearProgress from "@mui/material/LinearProgress";
 
 const drawerWidth = 240;
 
@@ -105,7 +106,8 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 );
 
 function MiniDrawer({ onFileUpload, onClearImages, onGetResult, onToggleAllDisplayModes, onDownloadAll, children,  onToggleQualityCheck,qualityCheckEnabled,hasResults,onSwitchView,
-                        currentView,onViewLogs }) {
+                        currentView,onViewLogs, isDownloading,
+                        modelStatus}) {
     const theme = useTheme();
     const [open, setOpen] = useState(false);
     const fileInputRef = React.useRef(null);
@@ -449,6 +451,33 @@ function MiniDrawer({ onFileUpload, onClearImages, onGetResult, onToggleAllDispl
                 <MenuItem onClick={() => { onGetResult('Gold Coast'); handleResultClose(); }}>Choose Gold Coast Scene</MenuItem>
                 <MenuItem onClick={() => { onGetResult('CoastSnap'); handleResultClose(); }}>Choose CoastSnap Scene</MenuItem>
             </Menu>
+            <Dialog
+                open={isDownloading}
+                aria-labelledby="alert-dialog-title"
+                sx={{
+                    '& .MuiDialog-paper': {
+                        marginTop: '64px',
+                        width: '100%',
+                        maxWidth: 'none',
+                        margin: 0,
+                        height: 'calc(100% - 64px)',
+                        borderRadius: 0,
+                    },
+                }}
+            >
+                <DialogTitle id="alert-dialog-title">{"Downloading Models"}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Some models are missing and are being downloaded. Please wait...
+                    </DialogContentText>
+                    {modelStatus && Object.entries(modelStatus).map(([model, status]) => (
+                        <div key={model}>
+                            <Typography variant="body2">{model}: {status}</Typography>
+                            {status === "Downloading" && <LinearProgress />}
+                        </div>
+                    ))}
+                </DialogContent>
+            </Dialog>
             <Dialog
                 open={confirmDialogOpen}
                 onClose={handleCancelClearImages}

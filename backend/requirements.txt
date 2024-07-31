@@ -11,3 +11,7 @@ torch
 torchvision
 efficientnet_pytorch
 argparse
+logging
+requests
+os
+gdown
