@@ -23,17 +23,16 @@ CORS(app)
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 限制上传大小为16MB
 app.config['UPLOAD_EXTENSIONS'] = ['.jpg', '.png', '.jpeg']
 app.config['THRESHOLD'] = 200  # 可以根据需要调整阈值
-app.config['CLASSIFICATION_MODEL_PATH'] = "/home/yiting/coaste-detect/backend/coast_classifier.pth"
+app.config['CLASSIFICATION_MODEL_PATH'] = "/app/backend/coast_classifier.pth"
 app.config['ENABLE_QUALITY_CHECK'] = False
 
 # 模型路径配置
 MODEL_PATHS = {
-    'General': "/home/yiting/coaste-detect/backend/General.pth",
-    'Narrabeen': "/home/yiting/coaste-detect/backend/Narrabeen.pth",
-    'Gold Coast': "/home/yiting/coaste-detect/backend/GoldCoast.pth",
-    'CoastSnap': "/home/yiting/coaste-detect/backend/CoastSnap.pth"
+    'General': "/app/backend/General.pth",
+    'Narrabeen': "/app/backend/Narrabeen.pth",
+    'Gold Coast': "/app/backend/GoldCoast.pth",
+    'CoastSnap': "/app/backend/CoastSnap.pth"
 }
-
 
 # 配置日志
 logging.basicConfig(level=logging.DEBUG)
@@ -52,8 +51,6 @@ class NumpyEncoder(json.JSONEncoder):
 
 # 全局变量来存储处理结果
 processed_results = []
-
-
 
 
 @app.route('/toggle_quality_check', methods=['POST'])
@@ -212,6 +209,7 @@ def clear_results():
 
 model_status = None
 
+
 @app.route('/initialize', methods=['GET'])
 def initialize():
     global model_status
@@ -220,14 +218,17 @@ def initialize():
         model_status = check_and_download_models()
     return jsonify(model_status)
 
+
 @app.route('/model_status', methods=['GET'])
 def get_model_status():
     global model_status
     if model_status is None:
         return jsonify({"error": "Model status not initialized"}), 400
     return jsonify(model_status)
+
+
 # 删除之前的 /model_status 路由
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)

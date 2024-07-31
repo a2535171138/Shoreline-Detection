@@ -7,11 +7,11 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 MODEL_PATHS = {
-    'General': "/home/yiting/coaste-detect/backend/General.pth",
-    'Narrabeen': "/home/yiting/coaste-detect/backend/Narrabeen.pth",
-    'Gold Coast': "/home/yiting/coaste-detect/backend/GoldCoast.pth",
-    'CoastSnap': "/home/yiting/coaste-detect/backend/CoastSnap.pth",
-    'coast_classifier': "/home/yiting/coaste-detect/backend/coast_classifier.pth"
+    'General': "/app/backend/General.pth",
+    'Narrabeen': "/app/backend/Narrabeen.pth",
+    'Gold Coast': "/app/backend/GoldCoast.pth",
+    'CoastSnap': "/app/backend/CoastSnap.pth",
+    'coast_classifier': "/app/backend/coast_classifier.pth"
 }
 
 MODEL_URLS = {
