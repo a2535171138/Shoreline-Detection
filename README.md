@@ -1,5 +1,5 @@
 # AI-Driven Shoreline Mapping for Coastal Monitoring
-This project uses deep learning and image processing methods to automatically map coastlines, including algorithm engineering and an easy-to-use user interface.
+This project uses deep learning and image processing methods to automatically map coastlines, including algorithm engineering and an easy-to-use user interface. 
 
 # Notice!!!!!!!!!!!!
 Before you use the user inferface, please download these model files and put them in ... directory!  
