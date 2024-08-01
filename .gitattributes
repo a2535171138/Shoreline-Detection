@@ -1,0 +1,2 @@
+backend/29_model.pth filter=lfs diff=lfs merge=lfs -text
+backend/*.pth filter=lfs diff=lfs merge=lfs -text

@@ -1,0 +1,4 @@
+[ZoneTransfer]
+ZoneId=3
+ReferrerUrl=https://github.com/
+HostUrl=https://objects.githubusercontent.com/github-production-release-asset-2e65be/807967766/142c4a6d-9ade-4001-97e2-e6664ebfd362?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=releaseassetproduction%2F20240731%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20240731T001322Z&X-Amz-Expires=300&X-Amz-Signature=f844e4e65180b3c8da2aa9d8242e10acdb6f7f18f859adb8a89905e4e7f26c41&X-Amz-SignedHeaders=host&actor_id=65598328&key_id=0&repo_id=807967766&response-content-disposition=attachment%3B%20filename%3DGeneral.pth&response-content-type=application%2Foctet-stream
