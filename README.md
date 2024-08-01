@@ -122,7 +122,9 @@ We optimized the UAED model for this project. For more details, please read `Alg
 
 # FrontEnd Part
 
-![Application Screenshot](path_to_screenshot.png)
+
+![image](https://github.com/user-attachments/assets/994e6e5a-dd63-4649-a424-a554d6648a75)
+
 
 ## Key Features
 
