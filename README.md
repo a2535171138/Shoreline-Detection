@@ -1,74 +1,121 @@
-<<<<<<< HEAD
-# Getting Started with Create React App
+# AI-Driven Shoreline Mapping for Coastal Monitoring
+This project uses deep learning and image processing methods to automatically map coastlines, including algorithm engineering and an easy-to-use user interface.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Notice!!!!!!!!!!!!
+Before you use the user inferface, please download these model files and put them in ... directory!  
+[General.pth](https://github.com/unsw-cse-comp99-3900-24t1/capstone-project-9900f16aleetcodekillers/releases/download/Models/General.pth)  
+[Narrabeen.pth](https://github.com/unsw-cse-comp99-3900-24t1/capstone-project-9900f16aleetcodekillers/releases/download/Models/Narrabeen.pth)  
+[CoastSnap.pth](https://github.com/unsw-cse-comp99-3900-24t1/capstone-project-9900f16aleetcodekillers/releases/download/Models/CoastSnap.pth)  
+[GoldCoast.pth](https://github.com/unsw-cse-comp99-3900-24t1/capstone-project-9900f16aleetcodekillers/releases/download/Models/GoldCoast.pth)  
+[coast_classifier.pth](https://github.com/unsw-cse-comp99-3900-24t1/capstone-project-9900f16aleetcodekillers/releases/download/Models/coast_classifier.pth)  
 
-## Available Scripts
 
-In the project directory, you can run:
+# Algorithm
 
-### `npm start`
+## Data Introduction
+my_project/  
+│  
+├── Argus goldcoast/  
+│   └── ...  
+├── Argus goldcoast shadow/  
+│   └── ...  
+├── Argus narrabeen/  
+│   └── ...  
+├── train_set.csv  
+├── test_set.csv  
+│  
+├── Algorithm/  
+│   └── ...  
+└── ...  
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **Description**: The project dataset is non-public data, from [Water Research Laboratory (UNSW Sydney)](https://www.unsw.edu.au/research/wrl).  
+- **Image data**: RGB coast images of varying sizes  
+- **csv file**: Holds all the data used for training or testing, the *path* column is the path of each image, the *label* column is the set of coastline pixels that have been labeled, and the other columns have other feature categories of the current image that will not affect the training.  
+<img src="sample.png" alt="Dataset Samples" width="500"/>  
+Figure 1 - The pixel point set of label drawn on the original coast image
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Data preprocessing
+In order to obtain the rectified data set with coordinate transformation `plan.csv`, please refer to the `Algorithm/jupyter notebooks/Coordinate_Correction.ipynb` file.  
 
-### `npm test`
+Combine csv data from different scenarios and outputs them into a trainable csv file.  
+```bash
+python Algorithm/DataProcessing/process_dataframes.py --csv_files coastsnap_segment_clean.csv argus_goldcoast_segment.csv segment_narraV2.csv plan.csv --folders 'CoastSnap' 'Argus goldcoast' 'Argus narrabeen' --output_csv data_set.csv
+```
+Class balance: Use --column to specify the balanced feature, where all classes will have the same amount of data.
+```bash
+python Algorithm/DataProcessing/balance_dataset.py --input_csv data_set.csv --output_csv balanced_data_set.csv --column site
+```
+Weighting chanllenging data: Use --column to specify the feature to be weighted, --value to specify the class of the feature to be weighted, and --multiplier to specify the rate of the weighting
+```bash
+python Algorithm/DataProcessing/weight_hard_examples.py --input_csv data_set.csv --output_csv weighted_data_set.csv --column shadow --value 1 --multiplier 4
+```
+Split training and test set
+```bash
+python Algorithm/DataProcessing/split_dataset.py --input_csv data_set.csv --train_csv train_set.csv --test_csv test_set.csv --num_train 1000 --num_test 200
+```
+Print the number of all categories for all features in the csv file
+```bash
+python Algorithm/DataProcessing/print_category_counts.py --file_path data_set.csv
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Model  
+This project uses 3 kinds of convolutional neural network models to realize the training and testing of coastline data. The model code from the following open source projects is used, and we would like to thank:  
+DEXINED: https://github.com/xavysp/DexiNed  
+UAED & MUGE: https://github.com/ZhouCX117/UAED_MuGE  
 
-### `npm run build`
+## UAED
+Before using UAED for training and prediction, you need to install efficientnet-pytorch
+```bash
+pip install efficientnet-pytorch
+```
+Train
+```bash
+python Algorithm/UAED_MuGE/train_uaed.py --batch_size 8 --csv_path 'train_set.csv' --tmp save_path/trainval_ --warmup 5 --maxepoch 25
+```
+Predict: Use --value to specify the folder name to save the predictions to, and --threshold to specify the threshold for post-processing to use for binarization
+```bash
+python Algorithm/Test/uaed_predict.py --input_image_path 'Argus goldcoast/.../image0.jpg' --model_path 'Narrabeen.pth' --save_dir result_dir --threshold 200
+```
+<img src="uaed_result.png" alt="uaed_result" width="500"/>  
+Figure 2 - The predicted pixel point set drawn on the original coast image  
+<br><br>
+Test: Use --binary_threshold to specify the threshold for post-processing to use for binarization, and --distance_threshold to specify the threshold for the ODS method to consider a two-point match  
+```bash
+python Algorithm/Test/uaed_test.py --input_csv 'test_set.csv' --model_path 'Narrabeen.pth' --save_path 'test_result.txt' --metric_method ODS --binary_threshold 200 --distance_threshold 50
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## MUGE
+Before using UAED for training and testing, you need to install openai-clip and efficientnet-pytorch
+```bash
+pip install openai-clip
+pip install efficientnet_pytorch
+```
+Train
+```bash
+python Algorithm/UAED_MuGE/train_muge.py
+```
+Test
+```bash
+python Algorithm/Test/muge_test.py --input_csv 'test_set.csv' --model_path 'Narrabeen.pth' --save_path 'test_result.txt' --metric_method ODS --binary_threshold 200 --distance_threshold 50
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## DEXINED
+Before using DEXINED for training and testing, you need to install kornia
+```bash
+pip install kornia
+```
+Train
+```bash
+python DexiNed/main.py
+```
+Test
+```bash
+python Algorithm/Test/Dexined_test.py --input_csv 'test_set.csv' --model_path 'Narrabeen.pth' --save_path 'test_result.txt' --metric_method ODS --binary_threshold 200 --distance_threshold 50
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Classification
+We have provided a pre-trained model for classifying coastlines, you can download it in [coast_classifier.pth](https://github.com/unsw-cse-comp99-3900-24t1/capstone-project-9900f16aleetcodekillers/releases/download/Models/coast_classifier.pth).  
+If you want to know more details or need to train your own model, please refer to the `Algorithm/jupyter notebooks/classify.ipynb` file for reference.
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-=======
-[![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-718a45dd9cf7e7f842a935f5ebbe5719a5e09af4491e668f4dbf3b35d5cca122.svg)](https://classroom.github.com/online_ide?assignment_repo_id=15178765&assignment_repo_type=AssignmentRepo)
->>>>>>> f1c2ce8365c01dad6686f74bf4d8ae14179183ec
+## Document
+We optimized the UAED model for this project. For more details, please read `Algorithm/Algorithm Report.pdf`  
