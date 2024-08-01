@@ -7,9 +7,14 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      - ./backend:/app/backend
+      - ./backend:/app/backend:rw
     environment:
+      - MODEL_BASE_PATH=/app/backend
       - FLASK_ENV=development
+      - ./backend:/app/backend:rw
+    networks:
+      - internet
+      - app-network
 
   frontend:
     build:
@@ -26,3 +31,11 @@ services:
       - REACT_APP_API_URL=http://localhost:5000
     depends_on:
       - backend
+    networks:
+      - app-network
+
+networks:
+  internet:
+    driver: bridge
+  app-network:
+    driver: bridge

@@ -60,6 +60,7 @@ def UAED_predict(input_img, checkpoint_path, threshold=200):
     binary_result = remove_noise(binary_result, 5)
 
     color_result = replace_with_red(input_img, binary_result)
+    color_result = cv2.cvtColor(color_result, cv2.COLOR_BGR2RGB)
 
     coordinates = np.column_stack(np.where(binary_result > 0))
     pixels_result = "MULTILINESTRING (("

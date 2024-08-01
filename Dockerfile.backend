@@ -5,6 +5,8 @@ RUN apt-get update && apt-get install -y \
     libgl1-mesa-glx \
     libglib2.0-0
 
+RUN mkdir -p /app/backend && chmod 777 /app/backend
+
 WORKDIR /app
 
 # 复制需求文件并安装 Python 依赖

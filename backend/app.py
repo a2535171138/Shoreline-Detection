@@ -33,7 +33,12 @@ MODEL_PATHS = {
     'Gold Coast': "/app/backend/GoldCoast.pth",
     'CoastSnap': "/app/backend/CoastSnap.pth"
 }
-
+# MODEL_PATHS = {
+#     'General': "/home/yiting/coaste-detect/backend/General.pth",
+#     'Narrabeen': "/home/yiting/coaste-detect/backend/Narrabeen.pth",
+#     'Gold Coast': "/home/yiting/coaste-detect/backend/GoldCoast.pth",
+#     'CoastSnap': "/home/yiting/coaste-detect/backend/CoastSnap.pth"
+# }
 # 配置日志
 logging.basicConfig(level=logging.DEBUG)
 
@@ -87,7 +92,7 @@ def predict_route(scene):
             if quality_result != 0:
                 quality_messages = {1: "Low Contrast", 2: "Underexposed", 3: "Overexposed"}
                 return jsonify({
-                    'error': f'Image quality check failed: {quality_messages.get(quality_result, "Unknown issue")}'}), 400
+                    'error': f'Image quality check attention: {quality_messages.get(quality_result, "Unknown issue")}'}), 400
 
             # 图像分类
             pil_image = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
