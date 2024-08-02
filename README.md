@@ -79,7 +79,7 @@ cd capstone-project-9900f16aleetcodekillers
 
 ## Cypress
 
-   1.Before you start, make sure you have Node.js and npm installed   
+   1.Before you start, make sure you have Node.js and npm installed.   
    
    2.Run the following command to install Cypress:
    ```bash
