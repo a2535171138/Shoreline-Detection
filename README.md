@@ -102,7 +102,7 @@ cd capstone-project-9900f16aleetcodekillers
    You should now be able to use the application.
 
 ## Images for test
-The images in folder `images` are provided for testing.
+The images in folder `images` are provided for testing.  
 <img src="https://github.com/user-attachments/assets/fc2c4308-0893-41f3-a8b2-bd659e6edc24" width="500">" 
 
 ## Cypress
