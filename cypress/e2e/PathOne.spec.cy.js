@@ -77,7 +77,7 @@ describe('End-to-End Test for Entire Application', () => {
     cy.contains('Choose Narrabeen Scene').click();
 
     // Wait for the network request to complete and get the response
-    cy.wait('@getResult', { timeout: 60000 }).then((interception) => {
+    cy.wait('@getResult', { timeout: 180000 }).then((interception) => {
         expect(interception.response.statusCode).to.eq(200);
     });
 

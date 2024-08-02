@@ -128,8 +128,9 @@ def predict_route(scene):
             'confidence': confidence
         }
 
-        # 添加结果到全局列表
+        # 更新全局结果列表，替换同名文件的结果
         global processed_results
+        processed_results = [r for r in processed_results if r['filename'] != result['filename']]
         processed_results.append(result)
 
         app.logger.info(f"Returning result with confidence: {confidence}")
