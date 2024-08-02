@@ -94,10 +94,10 @@ cd capstone-project-9900f16aleetcodekillers
 
 1. **Access the Local Server**
 
-   After the Docker containers are up and running, open your browser and go to:
-   ```
+   After the Docker containers are up and running, open your browser and go to:  
+
    http://localhost:3000/
-   ```
+   
 
    You should now be able to use the application.
 
