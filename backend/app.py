@@ -27,18 +27,18 @@ app.config['CLASSIFICATION_MODEL_PATH'] = "/app/backend/coast_classifier.pth"
 app.config['ENABLE_QUALITY_CHECK'] = False
 
 # 模型路径配置
-# MODEL_PATHS = {
-#     'General': "/app/backend/General.pth",
-#     'Narrabeen': "/app/backend/Narrabeen.pth",
-#     'Gold Coast': "/app/backend/GoldCoast.pth",
-#     'CoastSnap': "/app/backend/CoastSnap.pth"
-# }
 MODEL_PATHS = {
-    'General': "/home/yiting/coaste-detect/backend/General.pth",
-    'Narrabeen': "/home/yiting/coaste-detect/backend/Narrabeen.pth",
-    'Gold Coast': "/home/yiting/coaste-detect/backend/GoldCoast.pth",
-    'CoastSnap': "/home/yiting/coaste-detect/backend/CoastSnap.pth"
+    'General': "/app/backend/General.pth",
+    'Narrabeen': "/app/backend/Narrabeen.pth",
+    'Gold Coast': "/app/backend/GoldCoast.pth",
+    'CoastSnap': "/app/backend/CoastSnap.pth"
 }
+# MODEL_PATHS = {
+#     'General': "/home/yiting/coaste-detect/backend/General.pth",
+#     'Narrabeen': "/home/yiting/coaste-detect/backend/Narrabeen.pth",
+#     'Gold Coast': "/home/yiting/coaste-detect/backend/GoldCoast.pth",
+#     'CoastSnap': "/home/yiting/coaste-detect/backend/CoastSnap.pth"
+# }
 # 配置日志
 logging.basicConfig(level=logging.DEBUG)
 

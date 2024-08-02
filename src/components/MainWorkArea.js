@@ -103,9 +103,9 @@ function MainWorkArea({ uploadedImageFiles, predictionResults, showResults, onDe
     };
 
     const downloadCSV = (filename, pixelsResult) => {
-        // 创建CSV内容，添加path和WKT列标题
-        // const csvContent = "path,WKT\n" + `${filename},${pixelsResult}`;
-        const csvContent = `path,WKT\n${filename},${pixelsResult}`;
+        // 创建CSV内容，添加所有列的标题
+        const csvContent = "path,rectified site,camera,type,obstructi,downward,low,shadow,label\n" +
+            `${filename},,,,,,,,${pixelsResult}`;
 
         // 创建 Blob 对象
         const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -295,40 +295,74 @@ function MainWorkArea({ uploadedImageFiles, predictionResults, showResults, onDe
                 )}
             </div>
             <Modal show={showModal} onHide={() => setShowModal(false)} size="xl" centered fullscreen>
-                <Modal.Body style={{ height: '100vh', padding: 0, position: 'relative' }}>
+                <Modal.Body style={{ height: '100vh', padding: 0, position: 'relative', overflow: 'hidden' }}>
                     <TransformWrapper
                         initialScale={1}
-                        initialPositionX={0}
-                        initialPositionY={0}
+                        centerOnInit={true}
+                        minScale={0.1}
+                        maxScale={8}
                         ref={transformComponentRef}
                     >
-                        <TransformComponent wrapperStyle={{ width: '100%', height: '100%' }}>
-                            <img src={modalImage} alt="Enlarged" style={{maxWidth: '100%', maxHeight: '100%', objectFit: 'contain',margin: 'auto'}} />
-                        </TransformComponent>
-                    </TransformWrapper>
+                        {({ zoomIn, zoomOut, resetTransform }) => (
+                            <>
+                                <TransformComponent
+                                    wrapperStyle={{
+                                        width: '100%',
+                                        height: '100%',
+                                    }}
+                                    contentStyle={{
+                                        width: '100%',
+                                        height: '100%',
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                    }}
+                                >
+                                    <div style={{
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        width: '100%',
+                                        height: '100%',
+                                    }}>
+                                        <img
+                                            src={modalImage}
+                                            alt="Enlarged"
+                                            style={{
+                                                maxWidth: '100%',
+                                                maxHeight: '100%',
+                                                objectFit: 'contain',
+                                            }}
+                                        />
+                                    </div>
+                                </TransformComponent>
 
-                    {/* Control Bar */}
-                    <div style={{
-                        position: 'absolute',
-                        bottom: 20,
-                        left: '50%',
-                        transform: 'translateX(-50%)',
-                        backgroundColor: 'rgba(0,0,0,0.5)',
-                        borderRadius: 20,
-                        padding: '5px 10px',
-                        display: 'flex',
-                        gap: '10px'
-                    }}>
-                        <IconButton onClick={() => transformComponentRef.current?.zoomOut()} color="primary">
-                            <ZoomOutIcon />
-                        </IconButton>
-                        <IconButton onClick={() => transformComponentRef.current?.resetTransform()} color="primary">
-                            <RestartAltIcon />
-                        </IconButton>
-                        <IconButton onClick={() => transformComponentRef.current?.zoomIn()} color="primary">
-                            <ZoomInIcon />
-                        </IconButton>
-                    </div>
+                                {/* Control Bar */}
+                                <div style={{
+                                    position: 'absolute',
+                                    bottom: 20,
+                                    left: '50%',
+                                    transform: 'translateX(-50%)',
+                                    backgroundColor: 'rgba(0,0,0,0.5)',
+                                    borderRadius: 20,
+                                    padding: '5px 10px',
+                                    display: 'flex',
+                                    gap: '10px',
+                                    zIndex: 1000,
+                                }}>
+                                    <IconButton onClick={() => zoomOut()} color="primary">
+                                        <ZoomOutIcon />
+                                    </IconButton>
+                                    <IconButton onClick={() => resetTransform()} color="primary">
+                                        <RestartAltIcon />
+                                    </IconButton>
+                                    <IconButton onClick={() => zoomIn()} color="primary">
+                                        <ZoomInIcon />
+                                    </IconButton>
+                                </div>
+                            </>
+                        )}
+                    </TransformWrapper>
 
                     {/* Close Button */}
                     <IconButton
@@ -338,7 +372,8 @@ function MainWorkArea({ uploadedImageFiles, predictionResults, showResults, onDe
                             top: 10,
                             right: 10,
                             backgroundColor: 'rgba(0,0,0,0.5)',
-                            color: 'white'
+                            color: 'white',
+                            zIndex: 1000,
                         }}
                     >
                         <CloseIcon />
