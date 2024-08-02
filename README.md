@@ -147,7 +147,7 @@ We optimized the UAED model for this project. For more details, please read `Alg
 ## Installation Guide
 1. Clone the repository
  ```bash
-git clone https://github.com/your_username/shoreline-detection-app.git
+git clone https://github.com/unsw-cse-comp99-3900-24t1/capstone-project-9900f16aleetcodekillers.git
 cd shoreline-detection-app
 ```
 
