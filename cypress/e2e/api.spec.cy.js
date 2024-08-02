@@ -97,6 +97,7 @@ describe('API Tests', () => {
   });
 
   it('GET /download_all/color should download a zip file with color images', () => {
+    cy.wait(2000);
     cy.request({
       method: 'GET',
       url: `${baseUrl}/download_all/color`,
@@ -107,6 +108,7 @@ describe('API Tests', () => {
   });
 
   it('GET /download_all/all should download a zip file with all results', () => {
+    cy.wait(2000);
     cy.request({
       method: 'GET',
       url: `${baseUrl}/download_all/all`,
