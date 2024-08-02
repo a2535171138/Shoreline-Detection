@@ -22,8 +22,8 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import ZoomInIcon from '@mui/icons-material/ZoomIn';
 import ZoomOutIcon from '@mui/icons-material/ZoomOut';
-import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import CloseIcon from '@mui/icons-material/Close';
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
 // import {useLog} from "../LogContext";
 
 function MainWorkArea({ uploadedImageFiles, predictionResults, showResults, onDeleteImage, displayModes, setDisplayModes,currentView,onFileUpload }) {
@@ -79,7 +79,7 @@ function MainWorkArea({ uploadedImageFiles, predictionResults, showResults, onDe
     };
 
     const getDisplayImage = (result, index) => {
-        if (!result || result === 'error') return null;
+        if (!result || result.error) return null;
         return displayModes[index] === 'color' ? result.colorResult : result.binaryResult;
     };
 
@@ -126,24 +126,24 @@ function MainWorkArea({ uploadedImageFiles, predictionResults, showResults, onDe
     };
 
     const handleDownload = (type) => {
-        if (downloadIndex === null) return;
+        if (downloadIndex === null || !predictionResults[downloadIndex]) return;
         const result = predictionResults[downloadIndex];
         const fileName = uploadedImageFiles[downloadIndex].file.name;
 
         switch(type) {
             case 'binary':
-                downloadImage(result.binaryResult, `${fileName}_binary.png`);
+                if (result.binaryResult) downloadImage(result.binaryResult, `${fileName}_binary.png`);
                 break;
             case 'color':
-                downloadImage(result.colorResult, `${fileName}_color.png`);
+                if (result.colorResult) downloadImage(result.colorResult, `${fileName}_color.png`);
                 break;
             case 'pixels':
-                downloadCSV(fileName, result.pixelsResult);
+                if (result.pixelsResult) downloadCSV(fileName, result.pixelsResult);
                 break;
             case 'all':
-                downloadImage(result.binaryResult, `${fileName}_binary.png`);
-                downloadImage(result.colorResult, `${fileName}_color.png`);
-                downloadCSV(fileName, result.pixelsResult);
+                if (result.binaryResult) downloadImage(result.binaryResult, `${fileName}_binary.png`);
+                if (result.colorResult) downloadImage(result.colorResult, `${fileName}_color.png`);
+                if (result.pixelsResult) downloadCSV(fileName, result.pixelsResult);
                 break;
             default:
                 console.error(`Unknown download type: ${type}`);
@@ -368,16 +368,14 @@ function MainWorkArea({ uploadedImageFiles, predictionResults, showResults, onDe
                                     <IconButton onClick={() => zoomIn()} color="primary">
                                         <ZoomInIcon />
                                     </IconButton>
+                                    <IconButton onClick={() => setShowModal(false)} color="primary">
+                                        <CloseIcon />
+                                    </IconButton>
                                 </div>
                             </>
                         )}
                     </TransformWrapper>
                 </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={() => setShowModal(false)}>
-                        Close
-                    </Button>
-                </Modal.Footer>
             </Modal>
             <Menu
                 anchorEl={anchorEl}
