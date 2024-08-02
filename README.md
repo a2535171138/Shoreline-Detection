@@ -136,8 +136,8 @@ cd capstone-project-9900f16aleetcodekillers
 
 # Algorithm
 
-## 环境库安装清单
-- **Python**: 3.8 及以上
+## Environment Library Installation
+- **Python**: 3.8+
 - **NumPy**: 1.23.5
 - **Pandas**: 1.5.3
 - **Matplotlib**: 3.7.1
