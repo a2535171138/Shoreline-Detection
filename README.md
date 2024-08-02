@@ -27,7 +27,7 @@ This project uses deep learning and image processing methods to automatically ma
 
 ## Installation Guide
 1. Clone the repository
- ```bash
+```bash
 git clone https://github.com/unsw-cse-comp99-3900-24t1/capstone-project-9900f16aleetcodekillers.git
 cd capstone-project-9900f16aleetcodekillers
 ```
