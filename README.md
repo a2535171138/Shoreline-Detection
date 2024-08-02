@@ -3,7 +3,7 @@ This project uses deep learning and image processing methods to automatically ma
 
 ## Table of Contents
 
-[User Interface](#user-interface)
+1. [User Interface](#user-interface)
     - [Key Features](#key-features)
     - [Technology Stack](#technology-stack)
     - [Installation Guide](#installation-guide)
@@ -11,7 +11,7 @@ This project uses deep learning and image processing methods to automatically ma
     - [Key File Descriptions](#key-file-descriptions)
     - [Usage Workflow](#usage-workflow)
     - [Important Notes](#important-notes)
-[Algorithm](#algorithm)
+2. [Algorithm](#algorithm)
     - [Data Introduction](#data-introduction)
     - [Data Preprocessing](#data-preprocessing)
     - [Model](#model)
@@ -19,7 +19,7 @@ This project uses deep learning and image processing methods to automatically ma
         - [MUGE](#muge)
         - [DEXINED](#dexined)
     - [Classification](#classification)
-[Document](#document)
+3. [Document](#document)
 
 # User Interface
 
