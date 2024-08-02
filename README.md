@@ -1,24 +1,24 @@
 # AI-Driven Shoreline Mapping for Coastal Monitoring
-This project uses deep learning and image processing methods to automatically map coastlines, including algorithm engineering and an easy-to-use user interface.
+This project uses deep learning and image processing methods to automatically map coastlines, including algorithm engineering and an easy-to-use user interface. 
 
 ## Table of Contents
 
 1. [User Interface](#user-interface)
-   - [Key Features](#key-features)
-   - [Technology Stack](#technology-stack)
-   - [Installation Guide](#installation-guide)
-   - [Cypress](#cypress)
-   - [Key File Descriptions](#key-file-descriptions)
-   - [Usage Workflow](#usage-workflow)
-   - [Important Notes](#important-notes)
+    - [Key Features](#key-features)
+    - [Technology Stack](#technology-stack)
+    - [Installation Guide](#installation-guide)
+    - [Cypress](#cypress)
+    - [Key File Descriptions](#key-file-descriptions)
+    - [Usage Workflow](#usage-workflow)
+    - [Important Notes](#important-notes)
 2. [Algorithm](#algorithm)
-   - [Data Introduction](#data-introduction)
-   - [Data Preprocessing](#data-preprocessing)
-   - [Model](#model)
-      - [UAED](#uaed)
-      - [MUGE](#muge)
-      - [DEXINED](#dexined)
-   - [Classification](#classification)
+    - [Data Introduction](#data-introduction)
+    - [Data Preprocessing](#data-preprocessing)
+    - [Model](#model)
+        - [UAED](#uaed)
+        - [MUGE](#muge)
+        - [DEXINED](#dexined)
+    - [Classification](#classification)
 3. [Document](#document)
 
 # User Interface
@@ -60,7 +60,7 @@ cd capstone-project-9900f16aleetcodekillers
    [Narrabeen.pth](https://github.com/unsw-cse-comp99-3900-24t1/capstone-project-9900f16aleetcodekillers/releases/download/Models/Narrabeen.pth)  
    [CoastSnap.pth](https://github.com/unsw-cse-comp99-3900-24t1/capstone-project-9900f16aleetcodekillers/releases/download/Models/CoastSnap.pth)  
    [GoldCoast.pth](https://github.com/unsw-cse-comp99-3900-24t1/capstone-project-9900f16aleetcodekillers/releases/download/Models/GoldCoast.pth)  
-   [coast_classifier.pth](https://github.com/unsw-cse-comp99-3900-24t1/capstone-project-9900f16aleetcodekillers/releases/download/Models/coast_classifier.pth)
+   [coast_classifier.pth](https://github.com/unsw-cse-comp99-3900-24t1/capstone-project-9900f16aleetcodekillers/releases/download/Models/coast_classifier.pth)  
 
 2. **Save Models to `backend` Folder**
 
@@ -98,13 +98,13 @@ cd capstone-project-9900f16aleetcodekillers
 
 ## Cypress
 
-1.Before you start, make sure you have Node.js and npm installed.
-
-2.Run the following command to install Cypress:
+   1.Before you start, make sure you have Node.js and npm installed.   
+   
+   2.Run the following command to install Cypress:
    ```bash
    npm install cypress --save-dev --legacy-peer-deps
    ```
-3.Use Cypress's built-in test interface to run and debug tests:
+   3.Use Cypress's built-in test interface to run and debug tests:
    ```bash
    npx cypress open
    ```
@@ -150,18 +150,18 @@ my_project/
 │  
 ├── Algorithm/  
 │   └── ...  
-└── ...
+└── ...  
 
-- **Description**: The project dataset is non-public data, from [Water Research Laboratory (UNSW Sydney)](https://www.unsw.edu.au/research/wrl).
-- **Image data**: RGB coast images of varying sizes
+- **Description**: The project dataset is non-public data, from [Water Research Laboratory (UNSW Sydney)](https://www.unsw.edu.au/research/wrl).  
+- **Image data**: RGB coast images of varying sizes  
 - **csv file**: Holds all the data used for training or testing, the *path* column is the path of each image, the *label* column is the set of coastline pixels that have been labeled, and the other columns have other feature categories of the current image that will not affect the training.  
-  <img src="sample.png" alt="Dataset Samples" width="500"/>  
-  Figure 1 - The pixel point set of label drawn on the original coast image
+<img src="sample.png" alt="Dataset Samples" width="500"/>  
+Figure 1 - The pixel point set of label drawn on the original coast image
 
 ## Data preprocessing
-In order to obtain the rectified data set with coordinate transformation `plan.csv`, please refer to the `Algorithm/jupyter notebooks/Coordinate_Correction.ipynb` file.
+In order to obtain the rectified data set with coordinate transformation `plan.csv`, please refer to the `Algorithm/jupyter notebooks/Coordinate_Correction.ipynb` file.  
 
-Combine csv data from different scenarios and outputs them into a trainable csv file.
+Combine csv data from different scenarios and outputs them into a trainable csv file.  
 ```bash
 python Algorithm/DataProcessing/process_dataframes.py --csv_files coastsnap_segment_clean.csv argus_goldcoast_segment.csv segment_narraV2.csv plan.csv --folders 'CoastSnap' 'Argus goldcoast' 'Argus narrabeen' --output_csv data_set.csv
 ```
@@ -182,10 +182,10 @@ Print the number of all categories for all features in the csv file
 python Algorithm/DataProcessing/print_category_counts.py --file_path data_set.csv
 ```
 
-## Model
+## Model  
 This project uses 3 kinds of convolutional neural network models to realize the training and testing of coastline data. The model code from the following open source projects is used, and we would like to thank:  
 DEXINED: https://github.com/xavysp/DexiNed  
-UAED & MUGE: https://github.com/ZhouCX117/UAED_MuGE
+UAED & MUGE: https://github.com/ZhouCX117/UAED_MuGE  
 
 ## UAED
 Before using UAED for training and prediction, you need to install efficientnet-pytorch
