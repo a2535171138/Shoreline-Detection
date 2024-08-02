@@ -1,6 +1,28 @@
 # AI-Driven Shoreline Mapping for Coastal Monitoring
 This project uses deep learning and image processing methods to automatically map coastlines, including algorithm engineering and an easy-to-use user interface. 
 
+## Table of Contents
+
+1. [User Interface](#user-interface)
+2. [Key Features](#key-features)
+3. [Technology Stack](#technology-stack)
+4. [Installation Guide](#installation-guide)
+    - [Step 1: Install Models](#step-1-install-models)
+    - [Step 2: Build and Start Docker Containers](#step-2-build-and-start-docker-containers)
+    - [Step 3: Access the Application](#step-3-access-the-application)
+5. [Cypress](#cypress)
+6. [Key File Descriptions](#key-file-descriptions)
+7. [Usage Workflow](#usage-workflow)
+8. [Important Notes](#important-notes)
+9. [Algorithm](#algorithm)
+    - [Data Introduction](#data-introduction)
+    - [Data Preprocessing](#data-preprocessing)
+    - [Model](#model)
+        - [UAED](#uaed)
+        - [MUGE](#muge)
+        - [DEXINED](#dexined)
+    - [Classification](#classification)
+10. [Document](#document)
 
 # User Interface
 
@@ -222,7 +244,7 @@ python Algorithm/Test/Dexined_test.py --input_csv 'test_set.csv' --model_path 'N
 We have provided a pre-trained model for classifying coastlines, you can download it in [coast_classifier.pth](https://github.com/unsw-cse-comp99-3900-24t1/capstone-project-9900f16aleetcodekillers/releases/download/Models/coast_classifier.pth).  
 If you want to know more details or need to train your own model, please refer to the `Algorithm/jupyter notebooks/classify.ipynb` file for reference.
 
-## Document
+# Document
 We optimized the UAED model for this project. For more details, please read `Algorithm/Algorithm Report.pdf`  
 To learn how to use the complete user interface, please read `User Guide.pdf` 
 
