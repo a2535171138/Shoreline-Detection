@@ -136,6 +136,20 @@ cd capstone-project-9900f16aleetcodekillers
 
 # Algorithm
 
+## 环境库安装清单
+- **Python**: 3.8 及以上
+- **NumPy**: 1.23.5
+- **Pandas**: 1.5.3
+- **Matplotlib**: 3.7.1
+- **Scikit-Image**: 0.21.0
+- **SciPy**: 1.10.1
+- **Pillow**: 9.5.0
+- **PyTorch**: 2.0.1
+- **TorchVision**: 0.15.1
+- **EfficientNet-PyTorch**: 0.7.1
+- **OpenCV**: 4.8.0
+- **Shapely**: 2.0.1
+  
 ## Data Introduction
 my_project/  
 │  
