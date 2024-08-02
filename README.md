@@ -96,6 +96,10 @@ cd capstone-project-9900f16aleetcodekillers
 
    You should now be able to use the application.
 
+## Images for test
+The images in folder `images` are provided for testing.
+<img src="<img src="https://github.com/user-attachments/assets/994e6e5a-dd63-4649-a424-a554d6648a75" width="500">" width="500">
+
 ## Cypress
 
    1.Before you start, make sure you have Node.js and npm installed.   
