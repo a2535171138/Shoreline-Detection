@@ -155,7 +155,7 @@ cd shoreline-detection-app
 
 1. **Download Models**
 
-   Download the following models and save them in the  `backend` folder. 
+   Download the following models and save them in the  `backend` folder.   
    [General.pth](https://github.com/unsw-cse-comp99-3900-24t1/capstone-project-9900f16aleetcodekillers/releases/download/Models/General.pth)  
    [Narrabeen.pth](https://github.com/unsw-cse-comp99-3900-24t1/capstone-project-9900f16aleetcodekillers/releases/download/Models/Narrabeen.pth)  
    [CoastSnap.pth](https://github.com/unsw-cse-comp99-3900-24t1/capstone-project-9900f16aleetcodekillers/releases/download/Models/CoastSnap.pth)  
