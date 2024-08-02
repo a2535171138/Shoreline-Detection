@@ -1,14 +1,138 @@
 # AI-Driven Shoreline Mapping for Coastal Monitoring
 This project uses deep learning and image processing methods to automatically map coastlines, including algorithm engineering and an easy-to-use user interface.
 
-# Notice!!!!!!!!!!!!
-Before you use the user inferface, please download these model files and put them in ... directory!  
-[General.pth](https://github.com/unsw-cse-comp99-3900-24t1/capstone-project-9900f16aleetcodekillers/releases/download/Models/General.pth)  
-[Narrabeen.pth](https://github.com/unsw-cse-comp99-3900-24t1/capstone-project-9900f16aleetcodekillers/releases/download/Models/Narrabeen.pth)  
-[CoastSnap.pth](https://github.com/unsw-cse-comp99-3900-24t1/capstone-project-9900f16aleetcodekillers/releases/download/Models/CoastSnap.pth)  
-[GoldCoast.pth](https://github.com/unsw-cse-comp99-3900-24t1/capstone-project-9900f16aleetcodekillers/releases/download/Models/GoldCoast.pth)  
-[coast_classifier.pth](https://github.com/unsw-cse-comp99-3900-24t1/capstone-project-9900f16aleetcodekillers/releases/download/Models/coast_classifier.pth)  
+## Table of Contents
 
+1. [User Interface](#user-interface)
+   - [Key Features](#key-features)
+   - [Technology Stack](#technology-stack)
+   - [Installation Guide](#installation-guide)
+   - [Cypress](#cypress)
+   - [Key File Descriptions](#key-file-descriptions)
+   - [Usage Workflow](#usage-workflow)
+   - [Important Notes](#important-notes)
+2. [Algorithm](#algorithm)
+   - [Data Introduction](#data-introduction)
+   - [Data Preprocessing](#data-preprocessing)
+   - [Model](#model)
+      - [UAED](#uaed)
+      - [MUGE](#muge)
+      - [DEXINED](#dexined)
+   - [Classification](#classification)
+3. [Document](#document)
+
+# User Interface
+
+<img src="https://github.com/user-attachments/assets/994e6e5a-dd63-4649-a424-a554d6648a75" width="500">
+
+
+## Key Features
+
+- **Image Upload**: Support for single or multiple image uploads
+- **Shoreline Detection**: Automatic detection using an advanced AI model
+- **Quality Control**: Automatic image quality assessment for sample filtering
+- **Result Display**: Presentation of detection results in binary and color formats
+- **Result Download**: Batch download support in various formats (binary images, color images, pixel data CSV)
+- **Image Manipulation**: Support for image zooming and panning
+- **Logging System**: Detailed recording of all operations for easy tracking and analysis
+
+## Technology Stack
+
+- **Frontend**: React, Material-UI
+- **Backend**: Flask
+- **AI Model**: UNet++ architecture based on EfficientNet-B7
+- **Image Processing**: OpenCV, NumPy
+- **Others**: Pandas, Matplotlib
+
+## Installation Guide
+1. Clone the repository
+```bash
+git clone https://github.com/unsw-cse-comp99-3900-24t1/capstone-project-9900f16aleetcodekillers.git
+cd capstone-project-9900f16aleetcodekillers
+```
+
+### Step 1: Install Models
+
+1. **Download Models**
+
+   Download the following models and save them in the  `backend` folder.   
+   [General.pth](https://github.com/unsw-cse-comp99-3900-24t1/capstone-project-9900f16aleetcodekillers/releases/download/Models/General.pth)  
+   [Narrabeen.pth](https://github.com/unsw-cse-comp99-3900-24t1/capstone-project-9900f16aleetcodekillers/releases/download/Models/Narrabeen.pth)  
+   [CoastSnap.pth](https://github.com/unsw-cse-comp99-3900-24t1/capstone-project-9900f16aleetcodekillers/releases/download/Models/CoastSnap.pth)  
+   [GoldCoast.pth](https://github.com/unsw-cse-comp99-3900-24t1/capstone-project-9900f16aleetcodekillers/releases/download/Models/GoldCoast.pth)  
+   [coast_classifier.pth](https://github.com/unsw-cse-comp99-3900-24t1/capstone-project-9900f16aleetcodekillers/releases/download/Models/coast_classifier.pth)
+
+2. **Save Models to `backend` Folder**
+
+   Ensure all models are downloaded and saved in the `backend` folder.
+
+### Step 2: Build and Start Docker Containers
+
+1. **Build Docker Images**
+
+   Open a terminal and navigate to your project directory. Run the following command to build the Docker images:
+   ```bash
+   docker-compose build
+   ```
+
+2. **Start Docker Containers**
+
+   Once the build is complete, start the Docker containers by running:
+   ```bash
+   docker-compose up
+   ```
+
+   This will start your application and associated services.
+   Make sure you already install model
+
+### Step 3: Access the Application
+
+1. **Access the Local Server**
+
+   After the Docker containers are up and running, open your browser and go to:
+   ```
+   http://localhost:3000/
+   ```
+
+   You should now be able to use the application.
+
+## Cypress
+
+1.Before you start, make sure you have Node.js and npm installed.
+
+2.Run the following command to install Cypress:
+   ```bash
+   npm install cypress --save-dev --legacy-peer-deps
+   ```
+3.Use Cypress's built-in test interface to run and debug tests:
+   ```bash
+   npx cypress open
+   ```
+
+## Key File Descriptions
+
+- `backend/app.py`: Main Flask backend program
+- `backend/uaed_predict.py`: AI model prediction logic
+- `backend/quality.py`: Image quality assessment module
+- `frontend/src/App.js`: Main React frontend component
+- `frontend/src/components/MiniDrawer.js`: Main interface drawer component
+- `frontend/src/components/MainWorkArea.js`: Main work area component
+
+## Usage Workflow
+
+1. Upload Images: Click the "Upload Image" button to select and upload coastline images.
+2. Quality Check: Enable the "Quality Check" feature for automatic image quality assessment.
+3. Execute Detection: Click the "Get Result" button to start shoreline detection.
+4. View Results: Examine detection results on the interface, toggle between binary and color views.
+5. Download Results: Use the "Download All" feature to get results in desired formats.
+6. View Logs: Click the "View Logs" button to see detailed operation records.
+
+## Important Notes
+
+- It takes a long time to get results the first time because you need to install efficientnet automatically.
+- Ensure uploaded images are clear and contain distinct shorelines.
+- Be patient when processing large numbers of images, as it may take some time.
+- Regularly check and clear logs to maintain application performance.
 
 # Algorithm
 
@@ -26,18 +150,18 @@ my_project/
 │  
 ├── Algorithm/  
 │   └── ...  
-└── ...  
+└── ...
 
-- **Description**: The project dataset is non-public data, from [Water Research Laboratory (UNSW Sydney)](https://www.unsw.edu.au/research/wrl).  
-- **Image data**: RGB coast images of varying sizes  
+- **Description**: The project dataset is non-public data, from [Water Research Laboratory (UNSW Sydney)](https://www.unsw.edu.au/research/wrl).
+- **Image data**: RGB coast images of varying sizes
 - **csv file**: Holds all the data used for training or testing, the *path* column is the path of each image, the *label* column is the set of coastline pixels that have been labeled, and the other columns have other feature categories of the current image that will not affect the training.  
-<img src="sample.png" alt="Dataset Samples" width="500"/>  
-Figure 1 - The pixel point set of label drawn on the original coast image
+  <img src="sample.png" alt="Dataset Samples" width="500"/>  
+  Figure 1 - The pixel point set of label drawn on the original coast image
 
 ## Data preprocessing
-In order to obtain the rectified data set with coordinate transformation `plan.csv`, please refer to the `Algorithm/jupyter notebooks/Coordinate_Correction.ipynb` file.  
+In order to obtain the rectified data set with coordinate transformation `plan.csv`, please refer to the `Algorithm/jupyter notebooks/Coordinate_Correction.ipynb` file.
 
-Combine csv data from different scenarios and outputs them into a trainable csv file.  
+Combine csv data from different scenarios and outputs them into a trainable csv file.
 ```bash
 python Algorithm/DataProcessing/process_dataframes.py --csv_files coastsnap_segment_clean.csv argus_goldcoast_segment.csv segment_narraV2.csv plan.csv --folders 'CoastSnap' 'Argus goldcoast' 'Argus narrabeen' --output_csv data_set.csv
 ```
@@ -58,10 +182,10 @@ Print the number of all categories for all features in the csv file
 python Algorithm/DataProcessing/print_category_counts.py --file_path data_set.csv
 ```
 
-## Model  
+## Model
 This project uses 3 kinds of convolutional neural network models to realize the training and testing of coastline data. The model code from the following open source projects is used, and we would like to thank:  
 DEXINED: https://github.com/xavysp/DexiNed  
-UAED & MUGE: https://github.com/ZhouCX117/UAED_MuGE  
+UAED & MUGE: https://github.com/ZhouCX117/UAED_MuGE
 
 ## UAED
 Before using UAED for training and prediction, you need to install efficientnet-pytorch
@@ -117,114 +241,7 @@ python Algorithm/Test/Dexined_test.py --input_csv 'test_set.csv' --model_path 'N
 We have provided a pre-trained model for classifying coastlines, you can download it in [coast_classifier.pth](https://github.com/unsw-cse-comp99-3900-24t1/capstone-project-9900f16aleetcodekillers/releases/download/Models/coast_classifier.pth).  
 If you want to know more details or need to train your own model, please refer to the `Algorithm/jupyter notebooks/classify.ipynb` file for reference.
 
-## Document
-We optimized the UAED model for this project. For more details, please read `Algorithm/Algorithm Report.pdf`
-
-# FrontEnd Part
-
-
-![image](https://github.com/user-attachments/assets/994e6e5a-dd63-4649-a424-a554d6648a75)
-
-
-## Key Features
-
-- **Image Upload**: Support for single or multiple image uploads
-- **Shoreline Detection**: Automatic detection using an advanced AI model
-- **Quality Control**: Automatic image quality assessment for sample filtering
-- **Result Display**: Presentation of detection results in binary and color formats
-- **Result Download**: Batch download support in various formats (binary images, color images, pixel data CSV)
-- **Image Manipulation**: Support for image zooming and panning
-- **Logging System**: Detailed recording of all operations for easy tracking and analysis
-
-## Technology Stack
-
-- **Frontend**: React, Material-UI
-- **Backend**: Flask
-- **AI Model**: UNet++ architecture based on EfficientNet-B7
-- **Image Processing**: OpenCV, NumPy
-- **Others**: Pandas, Matplotlib
-
-## Installation Guide
-1. Clone the repository
-git clone https://github.com/your_username/shoreline-detection-app.git
-cd shoreline-detection-app
-
-### Step 1: Install Models
-
-1. **Download Models**
-
-   Download the following models and save them in the  `backend` folder. 
-
-   - **General**: [Download Link](https://drive.google.com/uc?id=1gQ7OCHDzCqruQuIzFE2oKAdzsSqsUAkH)
-   - **Narrabeen**: [Download Link](https://drive.google.com/uc?id=1eJevePtuSCtR7TGT2pidZ4qlRQLlWNMs)
-   - **Gold Coast**: [Download Link](https://drive.google.com/uc?id=17eTT7zOC9CLfuTBx43pUAQ6JFG7autLl)
-   - **CoastSnap**: [Download Link](https://drive.google.com/uc?id=1iAT9LjHjYXJvL7iiI3cWYxPI5bWR881V)
-   - **coast_classifier**: [Download Link](https://drive.google.com/uc?id=1q-Mmf2RFZ7nuNkJy4bNCVgtpxkMK6r2N)
-
-2. **Save Models to `backend` Folder**
-
-   Ensure all models are downloaded and saved in the `backend` folder.
-
-### Step 2: Build and Start Docker Containers
-
-1. **Build Docker Images**
-
-   Open a terminal and navigate to your project directory. Run the following command to build the Docker images:
-   ```bash
-   docker-compose build
-   ```
-
-2. **Start Docker Containers**
-
-   Once the build is complete, start the Docker containers by running:
-   ```bash
-   docker-compose up
-   ```
-
-   This will start your application and associated services.
-   Make sure you already install model
-
-### Step 3: Access the Application
-
-1. **Access the Local Server**
-
-   After the Docker containers are up and running, open your browser and go to:
-   ```
-   http://localhost:3000/
-   ```
-
-   You should now be able to use the application.
-
-3. Access the application in your browser at `http://localhost:3000`
-
-## Key File Descriptions
-
-- `backend/app.py`: Main Flask backend program
-- `backend/uaed_predict.py`: AI model prediction logic
-- `backend/quality.py`: Image quality assessment module
-- `frontend/src/App.js`: Main React frontend component
-- `frontend/src/components/MiniDrawer.js`: Main interface drawer component
-- `frontend/src/components/MainWorkArea.js`: Main work area component
-
-## Usage Workflow
-
-1. Upload Images: Click the "Upload Image" button to select and upload coastline images.
-2. Quality Check: Enable the "Quality Check" feature for automatic image quality assessment.
-3. Execute Detection: Click the "Get Result" button to start shoreline detection.
-4. View Results: Examine detection results on the interface, toggle between binary and color views.
-5. Download Results: Use the "Download All" feature to get results in desired formats.
-6. View Logs: Click the "View Logs" button to see detailed operation records.
-
-## Important Notes
-
-- Ensure uploaded images are clear and contain distinct shorelines.
-- Be patient when processing large numbers of images, as it may take some time.
-- Regularly check and clear logs to maintain application performance.
-
-## Future Plans
-
-- [ ] Support for more image formats
-- [ ] Addition of batch processing functionality
-- [ ] Improvement of AI model for enhanced detection accuracy
-- [ ] Implementation of user authentication system
+# Document
+We optimized the UAED model for this project. For more details, please read `Algorithm/Algorithm Report.pdf`  
+To learn how to use the complete user interface, please read `User Guide.pdf` 
 
