@@ -1,4 +1,0 @@
-[ZoneTransfer]
-ZoneId=3
-ReferrerUrl=https://github.com/
-HostUrl=https://objects.githubusercontent.com/github-production-release-asset-2e65be/807967766/dc9a5baf-da6d-406b-8b24-7e054b81cb20?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=releaseassetproduction%2F20240802%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20240802T150145Z&X-Amz-Expires=300&X-Amz-Signature=ca24891ec37a8e4c629f6b8c637742c0a3020d018e3e36784ce8c8f119d6fe2c&X-Amz-SignedHeaders=host&actor_id=65598328&key_id=0&repo_id=807967766&response-content-disposition=attachment%3B%20filename%3Dcoast_classifier.pth&response-content-type=application%2Foctet-stream
