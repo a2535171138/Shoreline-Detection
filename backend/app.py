@@ -33,6 +33,7 @@ MODEL_PATHS = {
     'Gold Coast': "/app/backend/GoldCoast.pth",
     'CoastSnap': "/app/backend/CoastSnap.pth"
 }
+
 # MODEL_PATHS = {
 #     'General': "/home/yiting/coaste-detect/backend/General.pth",
 #     'Narrabeen': "/home/yiting/coaste-detect/backend/Narrabeen.pth",
@@ -218,6 +219,11 @@ def clear_results():
     return jsonify({'message': 'All results cleared'}), 200
 
 
+@app.route('/delete_result/<filename>', methods=['DELETE'])
+def delete_result(filename):
+    global processed_results
+    processed_results = [result for result in processed_results if result['filename'] != filename]
+    return jsonify({'message': f'Result for {filename} deleted successfully'}), 200
 
 
 if __name__ == '__main__':

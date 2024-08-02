@@ -294,8 +294,17 @@ function MainWorkArea({ uploadedImageFiles, predictionResults, showResults, onDe
                     </div>
                 )}
             </div>
-            <Modal show={showModal} onHide={() => setShowModal(false)} size="xl" centered fullscreen>
-                <Modal.Body style={{ height: '100vh', padding: 0, position: 'relative', overflow: 'hidden' }}>
+            <Modal
+                show={showModal}
+                onHide={() => setShowModal(false)}
+                size="xl"
+                centered
+                fullscreen
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title>Image View</Modal.Title>
+                </Modal.Header>
+                <Modal.Body style={{ height: 'calc(100vh - 56px)', padding: 0, position: 'relative', overflow: 'hidden' }}>
                     <TransformWrapper
                         initialScale={1}
                         centerOnInit={true}
@@ -363,22 +372,12 @@ function MainWorkArea({ uploadedImageFiles, predictionResults, showResults, onDe
                             </>
                         )}
                     </TransformWrapper>
-
-                    {/* Close Button */}
-                    <IconButton
-                        onClick={() => setShowModal(false)}
-                        style={{
-                            position: 'absolute',
-                            top: 10,
-                            right: 10,
-                            backgroundColor: 'rgba(0,0,0,0.5)',
-                            color: 'white',
-                            zIndex: 1000,
-                        }}
-                    >
-                        <CloseIcon />
-                    </IconButton>
                 </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setShowModal(false)}>
+                        Close
+                    </Button>
+                </Modal.Footer>
             </Modal>
             <Menu
                 anchorEl={anchorEl}
