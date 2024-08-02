@@ -77,7 +77,18 @@ cd capstone-project-9900f16aleetcodekillers
 
    You should now be able to use the application.
 
-3. Access the application in your browser at `http://localhost:3000`
+## Cypress
+
+   1.Before you start, make sure you have Node.js and npm installed   
+   
+   2.Run the following command to install Cypress:
+   ```bash
+   npm install cypress --save-dev --legacy-peer-deps
+   ```
+   3.Use Cypress's built-in test interface to run and debug tests:
+   ```bash
+   npx cypress open
+   ```
 
 ## Key File Descriptions
 
@@ -99,6 +110,7 @@ cd capstone-project-9900f16aleetcodekillers
 
 ## Important Notes
 
+- It takes a long time to get results the first time because you need to install efficientnet automatically.
 - Ensure uploaded images are clear and contain distinct shorelines.
 - Be patient when processing large numbers of images, as it may take some time.
 - Regularly check and clear logs to maintain application performance.
