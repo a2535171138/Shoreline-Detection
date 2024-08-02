@@ -27,18 +27,18 @@ app.config['CLASSIFICATION_MODEL_PATH'] = "/app/backend/coast_classifier.pth"
 app.config['ENABLE_QUALITY_CHECK'] = False
 
 # 模型路径配置
-MODEL_PATHS = {
-    'General': "/app/backend/General.pth",
-    'Narrabeen': "/app/backend/Narrabeen.pth",
-    'Gold Coast': "/app/backend/GoldCoast.pth",
-    'CoastSnap': "/app/backend/CoastSnap.pth"
-}
 # MODEL_PATHS = {
-#     'General': "/home/yiting/coaste-detect/backend/General.pth",
-#     'Narrabeen': "/home/yiting/coaste-detect/backend/Narrabeen.pth",
-#     'Gold Coast': "/home/yiting/coaste-detect/backend/GoldCoast.pth",
-#     'CoastSnap': "/home/yiting/coaste-detect/backend/CoastSnap.pth"
+#     'General': "/app/backend/General.pth",
+#     'Narrabeen': "/app/backend/Narrabeen.pth",
+#     'Gold Coast': "/app/backend/GoldCoast.pth",
+#     'CoastSnap': "/app/backend/CoastSnap.pth"
 # }
+MODEL_PATHS = {
+    'General': "/home/yiting/coaste-detect/backend/General.pth",
+    'Narrabeen': "/home/yiting/coaste-detect/backend/Narrabeen.pth",
+    'Gold Coast': "/home/yiting/coaste-detect/backend/GoldCoast.pth",
+    'CoastSnap': "/home/yiting/coaste-detect/backend/CoastSnap.pth"
+}
 # 配置日志
 logging.basicConfig(level=logging.DEBUG)
 
@@ -168,7 +168,8 @@ def download_all():
 def download_all_type(type):
     if not processed_results:
         return jsonify({'error': 'No results to download'}), 400
-    if type == 'pixels':
+
+    if type == 'pixels' or type == 'all':
         csv_content = "path,rectified site,camera,type,obstructi,downward,low,shadow,label\n"
         for item in processed_results:
             filename = item['filename']
@@ -179,16 +180,20 @@ def download_all_type(type):
         memory_file.write(csv_content.encode('utf-8'))
         memory_file.seek(0)
 
-        return send_file(
-            memory_file,
-            mimetype='text/csv',
-            as_attachment=True,
-            download_name='all_pixels_results.csv'
-        )
-    else:
-        # 保持其他类型的下载逻辑不变
-        memory_file = io.BytesIO()
-        with zipfile.ZipFile(memory_file, 'w') as zf:
+        if type == 'pixels':
+            return send_file(
+                memory_file,
+                mimetype='text/csv',
+                as_attachment=True,
+                download_name='all_pixels_results.csv'
+            )
+
+    if type == 'all' or type in ['binary', 'color']:
+        zip_memory_file = io.BytesIO()
+        with zipfile.ZipFile(zip_memory_file, 'w') as zf:
+            if type == 'all' or type == 'pixels':
+                zf.writestr('all_pixels_results.csv', csv_content)
+
             for item in processed_results:
                 if type == 'binary' or type == 'all':
                     binary_data = base64.b64decode(item['binary_result'])
@@ -196,12 +201,10 @@ def download_all_type(type):
                 if type == 'color' or type == 'all':
                     color_data = base64.b64decode(item['color_result'])
                     zf.writestr(f"{item['filename']}_color.png", color_data)
-                if type == 'all':
-                    zf.writestr(f"{item['filename']}_pixels.txt", item['pixels_result'])
 
-        memory_file.seek(0)
+        zip_memory_file.seek(0)
         return send_file(
-            memory_file,
+            zip_memory_file,
             mimetype='application/zip',
             as_attachment=True,
             download_name=f'all_{type}_results.zip'

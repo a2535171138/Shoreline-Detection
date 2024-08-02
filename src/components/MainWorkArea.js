@@ -303,7 +303,7 @@ function MainWorkArea({ uploadedImageFiles, predictionResults, showResults, onDe
                         ref={transformComponentRef}
                     >
                         <TransformComponent wrapperStyle={{ width: '100%', height: '100%' }}>
-                            <img src={modalImage} alt="Enlarged" style={{maxWidth: '100%', maxHeight: '100%', objectFit: 'contain'}} />
+                            <img src={modalImage} alt="Enlarged" style={{maxWidth: '100%', maxHeight: '100%', objectFit: 'contain',margin: 'auto'}} />
                         </TransformComponent>
                     </TransformWrapper>
 

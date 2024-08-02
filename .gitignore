@@ -30,3 +30,5 @@ backend/CoastSnap.pth
 backend/General.pth
 backend/GoldCoast.pth
 backend/Narrabeen.pth
+results
+cypress/downloads
