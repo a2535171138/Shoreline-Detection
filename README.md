@@ -148,7 +148,7 @@ We optimized the UAED model for this project. For more details, please read `Alg
 1. Clone the repository
  ```bash
 git clone https://github.com/unsw-cse-comp99-3900-24t1/capstone-project-9900f16aleetcodekillers.git
-cd shoreline-detection-app
+cd capstone-project-9900f16aleetcodekillers
 ```
 
 ### Step 1: Install Models
