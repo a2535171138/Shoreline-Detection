@@ -14,7 +14,7 @@ from PIL import Image
 import json
 import io
 import zipfile
-from model_manager import check_and_download_models
+
 
 app = Flask(__name__)
 CORS(app)
@@ -94,7 +94,6 @@ def predict_route(scene):
                 return jsonify({
                     'error': f'Image quality check attention: {quality_messages.get(quality_result, "Unknown issue")}'}), 400
 
-            # 图像分类
             pil_image = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
             classification_result = classify_image(pil_image, app.config['CLASSIFICATION_MODEL_PATH'])
             if classification_result != 1:  # 假设1表示海岸线图片
@@ -127,6 +126,11 @@ def predict_route(scene):
             'processingTime': processing_time,
             'confidence': confidence
         }
+
+        # 添加结果到全局列表
+        global processed_results
+        processed_results.append(result)
+
         app.logger.info(f"Returning result with confidence: {confidence}")
 
         return json.dumps(result, cls=NumpyEncoder), 200, {'Content-Type': 'application/json'}
@@ -134,7 +138,6 @@ def predict_route(scene):
     except Exception as e:
         app.logger.error(f"Prediction failed: {str(e)}", exc_info=True)
         return jsonify({'error': f'Prediction failed: {str(e)}'}), 500
-
 
 @app.route('/download_all', methods=['GET'])
 def download_all():
@@ -212,27 +215,6 @@ def clear_results():
     return jsonify({'message': 'All results cleared'}), 200
 
 
-model_status = None
-
-
-@app.route('/initialize', methods=['GET'])
-def initialize():
-    global model_status
-    if model_status is None:
-        app.logger.info("Initializing model status")
-        model_status = check_and_download_models()
-    return jsonify(model_status)
-
-
-@app.route('/model_status', methods=['GET'])
-def get_model_status():
-    global model_status
-    if model_status is None:
-        return jsonify({"error": "Model status not initialized"}), 400
-    return jsonify(model_status)
-
-
-# 删除之前的 /model_status 路由
 
 
 if __name__ == '__main__':

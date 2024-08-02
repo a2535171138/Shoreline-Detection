@@ -118,4 +118,113 @@ We have provided a pre-trained model for classifying coastlines, you can downloa
 If you want to know more details or need to train your own model, please refer to the `Algorithm/jupyter notebooks/classify.ipynb` file for reference.
 
 ## Document
-We optimized the UAED model for this project. For more details, please read `Algorithm/Algorithm Report.pdf`  
+We optimized the UAED model for this project. For more details, please read `Algorithm/Algorithm Report.pdf`
+
+# FrontEnd Part
+
+
+![image](https://github.com/user-attachments/assets/994e6e5a-dd63-4649-a424-a554d6648a75)
+
+
+## Key Features
+
+- **Image Upload**: Support for single or multiple image uploads
+- **Shoreline Detection**: Automatic detection using an advanced AI model
+- **Quality Control**: Automatic image quality assessment for sample filtering
+- **Result Display**: Presentation of detection results in binary and color formats
+- **Result Download**: Batch download support in various formats (binary images, color images, pixel data CSV)
+- **Image Manipulation**: Support for image zooming and panning
+- **Logging System**: Detailed recording of all operations for easy tracking and analysis
+
+## Technology Stack
+
+- **Frontend**: React, Material-UI
+- **Backend**: Flask
+- **AI Model**: UNet++ architecture based on EfficientNet-B7
+- **Image Processing**: OpenCV, NumPy
+- **Others**: Pandas, Matplotlib
+
+## Installation Guide
+1. Clone the repository
+git clone https://github.com/your_username/shoreline-detection-app.git
+cd shoreline-detection-app
+
+### Step 1: Install Models
+
+1. **Download Models**
+
+   Download the following models and save them in the  `backend` folder. 
+
+   - **General**: [Download Link](https://drive.google.com/uc?id=1gQ7OCHDzCqruQuIzFE2oKAdzsSqsUAkH)
+   - **Narrabeen**: [Download Link](https://drive.google.com/uc?id=1eJevePtuSCtR7TGT2pidZ4qlRQLlWNMs)
+   - **Gold Coast**: [Download Link](https://drive.google.com/uc?id=17eTT7zOC9CLfuTBx43pUAQ6JFG7autLl)
+   - **CoastSnap**: [Download Link](https://drive.google.com/uc?id=1iAT9LjHjYXJvL7iiI3cWYxPI5bWR881V)
+   - **coast_classifier**: [Download Link](https://drive.google.com/uc?id=1q-Mmf2RFZ7nuNkJy4bNCVgtpxkMK6r2N)
+
+2. **Save Models to `backend` Folder**
+
+   Ensure all models are downloaded and saved in the `backend` folder.
+
+### Step 2: Build and Start Docker Containers
+
+1. **Build Docker Images**
+
+   Open a terminal and navigate to your project directory. Run the following command to build the Docker images:
+   ```bash
+   docker-compose build
+   ```
+
+2. **Start Docker Containers**
+
+   Once the build is complete, start the Docker containers by running:
+   ```bash
+   docker-compose up
+   ```
+
+   This will start your application and associated services.
+   Make sure you already install model
+
+### Step 3: Access the Application
+
+1. **Access the Local Server**
+
+   After the Docker containers are up and running, open your browser and go to:
+   ```
+   http://localhost:3000/
+   ```
+
+   You should now be able to use the application.
+
+3. Access the application in your browser at `http://localhost:3000`
+
+## Key File Descriptions
+
+- `backend/app.py`: Main Flask backend program
+- `backend/uaed_predict.py`: AI model prediction logic
+- `backend/quality.py`: Image quality assessment module
+- `frontend/src/App.js`: Main React frontend component
+- `frontend/src/components/MiniDrawer.js`: Main interface drawer component
+- `frontend/src/components/MainWorkArea.js`: Main work area component
+
+## Usage Workflow
+
+1. Upload Images: Click the "Upload Image" button to select and upload coastline images.
+2. Quality Check: Enable the "Quality Check" feature for automatic image quality assessment.
+3. Execute Detection: Click the "Get Result" button to start shoreline detection.
+4. View Results: Examine detection results on the interface, toggle between binary and color views.
+5. Download Results: Use the "Download All" feature to get results in desired formats.
+6. View Logs: Click the "View Logs" button to see detailed operation records.
+
+## Important Notes
+
+- Ensure uploaded images are clear and contain distinct shorelines.
+- Be patient when processing large numbers of images, as it may take some time.
+- Regularly check and clear logs to maintain application performance.
+
+## Future Plans
+
+- [ ] Support for more image formats
+- [ ] Addition of batch processing functionality
+- [ ] Improvement of AI model for enhanced detection accuracy
+- [ ] Implementation of user authentication system
+
