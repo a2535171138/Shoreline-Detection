@@ -98,7 +98,7 @@ cd capstone-project-9900f16aleetcodekillers
 
 ## Images for test
 The images in folder `images` are provided for testing.
-<img src="<img src="https://github.com/user-attachments/assets/fc2c4308-0893-41f3-a8b2-bd659e6edc24" width="500">" width="500">
+<img src="https://github.com/user-attachments/assets/fc2c4308-0893-41f3-a8b2-bd659e6edc24" width="500">" 
 
 ## Cypress
 
