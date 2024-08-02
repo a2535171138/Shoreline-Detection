@@ -99,9 +99,11 @@ function AppContent() {
     const handleDeleteImage = async (index) => {
         const file = uploadedImageFiles[index];
         try {
+            // 调用后端 API 删除结果
             await axios.delete(`http://localhost:5000/delete_result/${file.file.name}`);
         } catch (error) {
             console.error('Error deleting prediction result:', error);
+            // 可以在这里添加错误处理逻辑，例如显示一个错误消息
         }
         setUploadedImageFiles(prevFiles => {
             URL.revokeObjectURL(file.url);
@@ -250,6 +252,7 @@ function AppContent() {
                         onSwitchView={() => setCurrentView(currentView === 'upload' ? 'results' : 'upload')}
                         currentView={currentView}
                         onViewLogs={handleViewLogs}
+                        hasDownloadableResults={uploadedImageFiles.length > 0 && predictionResults.some(result => result !== null)}
                     >
                         {duplicateImageWarning && (
                             <Alert severity="warning" onClose={() => setDuplicateImageWarning(false)}>

@@ -107,7 +107,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 function MiniDrawer({ onFileUpload, onClearImages, onGetResult, onToggleAllDisplayModes, onDownloadAll, children,  onToggleQualityCheck,qualityCheckEnabled,hasResults,onSwitchView,
                         currentView,onViewLogs, isDownloading,
-                        modelStatus}) {
+                        modelStatus,hasDownloadableResults}) {
     const theme = useTheme();
     const [open, setOpen] = useState(false);
     const fileInputRef = React.useRef(null);
@@ -370,26 +370,29 @@ function MiniDrawer({ onFileUpload, onClearImages, onGetResult, onToggleAllDispl
                         </Tooltip>
                     </ListItem>
                     <ListItem disablePadding sx={{ display: 'block' }}>
-                        <Tooltip title="Download All Results In Different Formats. (Binary images, Color images or Pixel data)" >
-                            <ListItemButton
-                                onClick={handleDownloadAllClick}
-                                sx={{
-                                    minHeight: 48,
-                                    justifyContent: open ? 'initial' : 'center',
-                                    px: 2.5,
-                                }}
-                            >
-                                <ListItemIcon
-                                    sx={{
-                                        minWidth: 0,
-                                        mr: open ? 3 : 'auto',
-                                        justifyContent: 'center',
-                                    }}
-                                >
-                                    <DownloadRoundedIcon />
-                                </ListItemIcon>
-                                <ListItemText primary="Download All" sx={{ opacity: open ? 1 : 0 }} />
-                            </ListItemButton>
+                        <Tooltip title={hasDownloadableResults ? "Download All Results In Different Formats. (Binary images, Color images or Pixel data)" : "No results to download"}>
+        <span>
+            <ListItemButton
+                onClick={handleDownloadAllClick}
+                disabled={!hasDownloadableResults}  // 添加这个条件
+                sx={{
+                    minHeight: 48,
+                    justifyContent: open ? 'initial' : 'center',
+                    px: 2.5,
+                }}
+            >
+                <ListItemIcon
+                    sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : 'auto',
+                        justifyContent: 'center',
+                    }}
+                >
+                    <DownloadRoundedIcon />
+                </ListItemIcon>
+                <ListItemText primary="Download All" sx={{ opacity: open ? 1 : 0 }} />
+            </ListItemButton>
+        </span>
                         </Tooltip>
                     </ListItem>
                     <ListItem disablePadding sx={{ display: 'block' }}>
