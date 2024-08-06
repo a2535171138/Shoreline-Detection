@@ -61,11 +61,11 @@ cd capstone-project-9900f16aleetcodekillers
 1. **Download Models**
 
    Download the following models and save them in the  `backend` folder.   
-   [General.pth](https://github.com/unsw-cse-comp99-3900-24t1/capstone-project-9900f16aleetcodekillers/releases/download/Models/General.pth)  
-   [Narrabeen.pth](https://github.com/unsw-cse-comp99-3900-24t1/capstone-project-9900f16aleetcodekillers/releases/download/Models/Narrabeen.pth)  
-   [CoastSnap.pth](https://github.com/unsw-cse-comp99-3900-24t1/capstone-project-9900f16aleetcodekillers/releases/download/Models/CoastSnap.pth)  
-   [GoldCoast.pth](https://github.com/unsw-cse-comp99-3900-24t1/capstone-project-9900f16aleetcodekillers/releases/download/Models/GoldCoast.pth)  
-   [coast_classifier.pth](https://github.com/unsw-cse-comp99-3900-24t1/capstone-project-9900f16aleetcodekillers/releases/download/Models/coast_classifier.pth)  
+   [General.pth](https://github.com/a2535171138/Shoreline-Detection/releases/download/a/General.pth)  
+   [Narrabeen.pth](https://github.com/a2535171138/Shoreline-Detection/releases/download/a/Narrabeen.pth)  
+   [CoastSnap.pth](https://github.com/a2535171138/Shoreline-Detection/releases/download/a/CoastSnap.pth)  
+   [GoldCoast.pth](https://github.com/a2535171138/Shoreline-Detection/releases/download/a/GoldCoast.pth)  
+   [coast_classifier.pth](https://github.com/a2535171138/Shoreline-Detection/releases/download/a/coast_classifier.pth)  
 
 2. **Save Models to `backend` Folder**
 
