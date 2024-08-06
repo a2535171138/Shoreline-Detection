@@ -2,7 +2,7 @@
 This project uses deep learning and image processing methods to automatically map coastlines, including algorithm engineering and an easy-to-use user interface. 
 
 ## Table of Contents
-
+ 
 1. [User Interface](#user-interface)
     - [Key Features](#key-features)
     - [Technology Stack](#technology-stack)
